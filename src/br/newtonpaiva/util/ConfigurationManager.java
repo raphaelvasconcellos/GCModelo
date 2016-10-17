@@ -21,7 +21,9 @@ public class ConfigurationManager {
 
     static {
         try {
-            CONFIG.loadFromXML(new FileInputStream("config.xml"));
+            //CONFIG.loadFromXML(new FileInputStream("config.xml"));
+            CONFIG.loadFromXML(ConfigurationManager
+                    .class.getResourceAsStream("/config.xml"));
             DB_URL = CONFIG.getProperty("db.url");
             DB_USUARIO = CONFIG.getProperty("db.usuario");
             DB_SENHA = CONFIG.getProperty("db.senha");
