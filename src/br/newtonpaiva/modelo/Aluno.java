@@ -1,0 +1,300 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package br.newtonpaiva.modelo;
+
+import br.newtonpaiva.modelo.excessoes.AlunoInvalidoException;
+import static br.newtonpaiva.util.ConfigurationManager.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ *
+ * @author tarle
+ */
+public class Aluno {
+
+    private Integer id;
+    private String ra;
+    private String nome;
+    private String email;
+    private String cpf;
+    private Curso curso;
+    private String deficiente;
+    private List<Contrato> contratos;
+
+    /**
+     * @return the id
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    /**
+     * @param id the id to set
+     */
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    /**
+     * @return the ra
+     */
+    public String getRa() {
+        return ra;
+    }
+
+    /**
+     * @param ra the ra to set
+     */
+    public void setRa(String ra) {
+        this.ra = ra;
+    }
+
+    /**
+     * @return the nome
+     */
+    public String getNome() {
+        return nome;
+    }
+
+    /**
+     * @param nome the nome to set
+     */
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    /**
+     * @return the curso
+     */
+    public Curso getCurso() {
+        return curso;
+    }
+
+    /**
+     * @param curso the curso to set
+     */
+    public void setCurso(Curso curso) {
+        this.curso = curso;
+    }
+
+    /**
+     * @return the contratos
+     */
+    public List<Contrato> getContratos() {
+        return contratos;
+    }
+
+    /**
+     * @param contratos the contratos to set
+     */
+    public void setContratos(List<Contrato> contratos) {
+        this.contratos = contratos;
+    }
+
+    @Override
+    public String toString() {
+        return "Aluno{" + "id=" + id + ", ra=" + ra + ", nome=" + nome + ", email=" + email + ", curso=" + curso + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + Objects.hashCode(this.ra);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Aluno other = (Aluno) obj;
+        if (!Objects.equals(this.ra, other.ra)) {
+            return false;
+        }
+        return true;
+    }
+
+    public void salvar() throws AlunoInvalidoException, SQLException {
+        if (getCurso() == null) {
+            throw new AlunoInvalidoException("O Curso deve ser informado.");
+        }
+
+        if (getRa() == null) {
+            throw new AlunoInvalidoException("O RA deve ser informado.");
+        }
+
+        if (getNome() == null) {
+            throw new AlunoInvalidoException("O Nome deve ser informado.");
+        }
+
+        if (getId() == null) {
+            try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                    PreparedStatement stm = con.prepareStatement(appSettings("usuario.insert"), Statement.RETURN_GENERATED_KEYS)) {
+
+                stm.setInt(1, getCurso().ordinal() + 1);
+                stm.setString(2, getRa());
+                stm.setString(3, getNome());
+                stm.setString(4, getEmail());
+                stm.setString(5, getCpf());
+                stm.setString(6, getDeficiente());
+
+                stm.executeUpdate();
+
+                ResultSet rs = stm.getGeneratedKeys();
+                if (rs.next()) {
+                    setId(rs.getInt(1));
+                } else {
+                    throw new SQLException("Não foi possivel inserir o usuario");
+                }
+
+            }
+        } else {
+            try (Connection con = DriverManager.getConnection(
+                    DB_URL, DB_USUARIO, DB_SENHA);
+                    PreparedStatement stm = con.prepareStatement(appSettings("aluno.update"))) {
+
+                stm.setInt(1, getCurso().ordinal() + 1);
+                stm.setString(2, getRa());
+                stm.setString(3, getNome());
+                stm.setString(4, getEmail());
+                stm.setString(5, getCpf());
+                stm.setString(6, getDeficiente());
+                stm.setInt(7, getId());
+
+                stm.executeUpdate();
+            }
+        }
+
+    }
+
+    public static int excluir(Integer id) throws AlunoInvalidoException, SQLException {
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement s = c.prepareStatement(appSettings("aluno.delete"));) {
+
+            s.setInt(1, id);
+            return s.executeUpdate();
+
+        }
+
+    }
+
+    public static Aluno buscarPorId(Integer id) throws SQLException {
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement s = c.prepareStatement(appSettings("aluno.selectid"))) {
+
+            s.setInt(1, id);
+
+            try (ResultSet r = s.executeQuery()) {
+
+                if (r.next()) {
+                    Aluno a = new Aluno();
+                    a.setId(r.getInt(1));
+                    a.setCurso(Curso.values()[r.getInt(2) - 1]);
+                    a.setRa(r.getString(3));
+                    a.setNome(r.getString(4));
+                    a.setCpf(r.getString(5));
+                    a.setEmail(r.getString(6));
+                    a.setDeficiente(r.getString(7));
+
+                    return a;
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+
+    public List<Aluno> buscarTodos() throws SQLException {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement stm = con.prepareStatement(appSettings("aluno.select"))) {
+
+            try (ResultSet r = stm.executeQuery()) {
+                List<Aluno> lista = new ArrayList();
+                while (r.next()) {
+                    Aluno a = new Aluno();
+                    a.setId(r.getInt(1));
+                    a.setCurso(Curso.values()[r.getInt(2) - 1]);
+                    a.setRa(r.getString(3));
+                    a.setNome(r.getString(4));
+                    a.setCpf(r.getString(5));
+                    a.setEmail(r.getString(6));
+                    a.setDeficiente(r.getString(7));
+                    lista.add(a);
+                }
+                return lista;
+            }
+        }
+    }
+
+    private String getString(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private Integer getInt(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private void setCurso(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    /**
+     * @return the cpf
+     */
+    public String getCpf() {
+        return cpf;
+    }
+
+    /**
+     * @param cpf the cpf to set
+     */
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    /**
+     * @return the deficiente
+     */
+    public String getDeficiente() {
+        return deficiente;
+    }
+
+    /**
+     * @param deficiente the deficiente to set
+     */
+    public void setDeficiente(String deficiente) {
+        this.deficiente = deficiente;
+    }
+}

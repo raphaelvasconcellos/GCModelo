@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="db.url">jdbc:mysql://localhost:3306/gc</entry>
+    <entry key="db.usuario">root</entry>
+    <entry key="db.senha"></entry>
+    
+    <entry key="usuario.insert">
+        insert into usuario(
+            nom_usuario, 
+            des_login, 
+            cod_senha, 
+            des_email)
+        values(
+            ?,
+            ?,
+            ?,
+            ?);</entry>
+    <entry key="usuario.update">
+        update usuario set 
+            nom_usuario = ?, 
+            des_login = ?,
+            cod_senha = ?, 
+            des_email = ?
+        where cod_usuario = ?;</entry>
+    <entry key="usuario.delete">delete from usuario where cod_usuario = ?;</entry>
+    <entry key="usuario.select.id">
+        select 
+            cod_usuario, 
+            nom_usuario, 
+            des_login, 
+            des_email 
+
+        from usuario
+        
+        where cod_usuario = ?;</entry>
+    <entry key="usuario.select.login">
+        select cod_senha
+        from usuario
+        where des_login = ?
+    </entry>
+   
+    <entry key="usuario.select">
+        select 
+        cod_usuario, 
+        nom_usuario, 
+        des_login, 
+        des_email
+
+        from usuario;
+    </entry>                                 
+                                    
+                                    
+    <entry key="aluno.insert"> insert into aluno(        
+        cod_curso,
+        num_ra,
+        nom_aluno,
+        des_email,
+        num_cpf_aluno,
+        ind_deficiente
+        )values(        
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,                                
+        ?);</entry>
+                                    
+    <entry key="aluno.update">update aluno set         
+        cod_curso = ?,
+        num_ra = ?,
+        nom_aluno = ?,
+        num_cpf_aluno = ?,
+        des_email = ?,        
+        ind_deficiente = ?
+        where cod_aluno = ?;</entry>
+        
+    <entry key="aluno.delete">delete from aluno where cod_aluno = ?;</entry>
+    <entry key="aluno.select">select * from aluno;</entry>
+    <entry key="aluno.selectid">select * from aluno where cod_aluno = ?;</entry>
+                                     
+                                                    
+    <entry key="empresa.insert">
+        insert into empresa
+        (
+        nom_empresa,
+        num_cnpj, 
+        des_endereco,
+        nom_bairro,
+        num_cep,
+        nom_cidade,
+        des_uf,
+        des_email,
+        num_telefone,
+        nom_contato,
+        des_observacao
+        )
+        values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    </entry>    
+    
+    <entry key="empresa.delete">delete from empresa where cod_empresa = ? </entry>    
+    
+    <entry key="empresa.selectall">select  
+        cod_empresa,
+        nom_empresa,
+        num_cnpj, 
+        des_endereco,
+        nom_bairro,
+        num_cep,
+        nom_cidade,
+        des_uf,
+        des_email,
+        num_telefone,
+        nom_contato,
+        des_observacao
+        from empresa
+    </entry>   
+     
+    <entry key="empresa.select">
+        select  cod_empresa,
+        nom_empresa,
+        num_cnpj, 
+        des_endereco,
+        nom_bairro,
+        num_cep,
+        nom_cidade,
+        des_uf,
+        des_email,
+        num_telefone,
+        nom_contato,
+        des_observacao
+        from empresa
+        where cod_empresa = ?;
+    </entry>
+    
+    <entry key="empresa.update">
+        update  empresa
+        set  nom_empresa=?,
+        num_cnpj=?, 
+        des_endereco=?,
+        nom_bairro=?,
+        num_cep=?,
+        nom_cidade=?,
+        des_uf=?,
+        des_email=?,
+        num_telefone=?,
+        nom_contato=?,
+        des_observacao=?
+        where cod_empresa = ?
+    </entry>
+    
+    <entry key="convenio.insert">
+        insert into convenio
+        (
+        cod_empresa,
+        cod_curso, 
+        cod_convenio_situacao,
+        dat_vencimento,
+        dat_assinatura)
+        values(?, ?, ?, ?, ?);
+    </entry>    
+    
+    <entry key="convenio.delete">delete from convenio where cod_convenio = ? </entry>    
+    
+    <entry key="convenio.selectall">select 
+        cod_convenio, 
+        cod_empresa,
+        cod_curso, 
+        cod_convenio_situacao,
+        dat_vencimento,
+        dat_assinatura
+        from convenio
+    </entry>   
+     
+    <entry key="convenio.select">
+        select  cod_convenio,
+        cod_empresa,
+        cod_curso, 
+        cod_convenio_situacao,
+        dat_vencimento,
+        dat_assinatura
+        from convenio
+        where cod_convenio = ?;
+    </entry>
+    
+    <entry key="convenio.selectidempresa">
+        select  cod_convenio,
+        cod_empresa,
+        cod_curso, 
+        cod_convenio_situacao,
+        dat_vencimento,
+        dat_assinatura
+        from convenio
+        where cod_empresa = ?;
+    </entry>
+    
+    <entry key="convenio.update">
+        update  convenio
+        set  cod_empresa=?,
+        cod_curso=?, 
+        cod_convenio_situacao=?,
+        dat_vencimento=?,
+        dat_assinatura=?
+        where cod_convenio = ?
+    </entry>
+    
+    
+                                                                        
+    <entry key="contrato.selectall">select 
+        cod_contrato,
+        cod_aluno,
+        cod_empresa,
+        cod_contrato_tipo,
+        cod_contrato_situacao_atual,
+        num_protocolo,
+        dat_entrada,
+        dat_inicio_atual,
+        dat_termino_atual,
+        dat_rescisao,
+        val_bolsa,
+        val_auxilio_transporte,
+        qtd_carga_horaria_diaria,
+        qtd_carga_horaria_semanal,
+        des_observacao,
+        ind_aluno_contratado
+        from contrato;</entry>
+    
+    <entry key="contrato.insert">insert into contrato(cod_aluno,
+        cod_empresa,
+        cod_contrato_tipo,
+        cod_contrato_situacao_atual,
+        num_protocolo,
+        dat_entrada,
+        dat_inicio_atual,
+        dat_termino_atual,
+        dat_rescisao,
+        val_bolsa,
+        val_auxilio_transporte,
+        qtd_carga_horaria_diaria,
+        qtd_carga_horaria_semanal,
+        des_observacao,
+        ind_aluno_contratado)values(
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?);</entry>
+    <entry key="contrato.update">update contrato set 
+        cod_aluno = ?,
+        cod_empresa = ?,
+        cod_contrato_tipo = ?,
+        cod_contrato_situacao_atual = ?,
+        num_protocolo = ?,
+        dat_entrada = ?,
+        dat_inicio_atual = ?,
+        dat_termino_atual = ?,
+        dat_rescisao = ?,
+        val_bolsa = ?,
+        val_auxilio_transporte = ?,
+        qtd_carga_horaria_diaria = ?,
+        qtd_carga_horaria_semanal = ?,
+        des_observacao = ?,
+        ind_aluno_contratado = ?
+        where cod_contrato = ?;</entry>
+                                        
+    <entry key="contrato.delete">delete from contrato where cod_contrato = ?;</entry>
+    <entry key="contrato.select">select cod_contrato,
+        cod_aluno,
+        cod_empresa,
+        cod_contrato_tipo,
+        cod_contrato_situacao_atual,
+        num_protocolo,
+        dat_entrada,
+        dat_inicio_atual,
+        dat_termino_atual,
+        dat_rescisao,
+        val_bolsa,
+        val_auxilio_transporte,
+        qtd_carga_horaria_diaria,
+        qtd_carga_horaria_semanal,
+        des_observacao,
+        ind_aluno_contratado 
+        from contrato 
+        where cod_contrato = ?;</entry>  
+    <entry key="contrato.selectidaluno">select cod_contrato,
+        cod_aluno,
+        cod_empresa,
+        cod_contrato_tipo,
+        cod_contrato_situacao_atual,
+        num_protocolo,
+        dat_entrada,
+        dat_inicio_atual,
+        dat_termino_atual,
+        dat_rescisao,
+        val_bolsa,
+        val_auxilio_transporte,
+        qtd_carga_horaria_diaria,
+        qtd_carga_horaria_semanal,
+        des_observacao,
+        ind_aluno_contratado 
+        from contrato 
+        where cod_aluno = ?;</entry>  
+    
+    <entry key="contrato.buscaTotalHorasDiarias">select 
+        coalesce(sum(QTD_CARGA_HORARIA_DIARIA),0.00) as total_diario 
+        from contrato 
+        where cod_contrato_situacao_atual = 1 and cod_aluno = ?;
+    </entry>     
+    <entry key="contrato.buscaTotalHorasDiariasEdicao">select 
+        coalesce(sum(QTD_CARGA_HORARIA_DIARIA),0.00) as total_diario 
+        from contrato 
+        where cod_contrato_situacao_atual = 1 and cod_aluno = ? and cod_contrato not in(?);
+    </entry> 
+    <entry key="contrato.buscaTotalHorasSemanais">select 
+        coalesce(sum(QTD_CARGA_HORARIA_SEMANAL),0.00) as total_semanal 
+        from contrato 
+        where cod_contrato_situacao_atual = 1 and cod_aluno = ?;
+    </entry> 
+    <entry key="contrato.buscaTotalHorasSemanaisEdicao">select 
+        coalesce(sum(QTD_CARGA_HORARIA_SEMANAL),0.00) as total_semanal 
+        from contrato 
+        where cod_contrato_situacao_atual = 1 and cod_aluno = ? and cod_contrato not in (?);
+    </entry> 
+    <entry key="contrato.buscaTempoContratoAlunoEmpresa">select 
+        coalesce(sum(DATEDIFF(dat_termino_atual, dat_inicio_atual)+1)) as total_dias 
+        from contrato 
+        where cod_aluno =? and cod_empresa = ?;
+    </entry>
+    <entry key="contrato.buscaTempoContratoAlunoEmpresaEdicao">select  
+        coalesce(sum(DATEDIFF(dat_termino_atual, dat_inicio_atual)+1)) as total_dias 
+        from contrato 
+        where cod_aluno =? and cod_empresa = ? and cod_contrato not in (?);
+    </entry>
+    
+    
+    
+    <entry key="contrato.insertdocumento">insert into documento_digitalizado(cod_contrato, img_documento)values(
+        ?,
+        ?);</entry>
+    <entry key="contrato.selectdocumento">select img_documento from documento_digitalizado where cod_contrato = ?;</entry>
+    
+    
+    <entry key="contratohistorico.insert"> insert into contrato_situacao_historico(        
+        cod_contrato,
+        cod_contrato_situacao,
+        dat_situacao,
+        des_observacao
+        )values(       
+        ?,
+        ?,
+        ?,                                
+        ?);</entry>
+        
+        
+    <entry key="contratohistorico.delete">delete from contrato_situacao_historico where cod_contrato_situacao_historico = ?;</entry>
+    <entry key="contratohistorico.selectidcontrato">select 
+        cod_contrato_situacao_historico,
+        cod_contrato,
+        cod_contrato_situacao,
+        dat_situacao,
+        des_observacao 
+        from contrato_situacao_historico 
+        where cod_contrato = ?;
+    </entry>
+    
+    
+    <entry key="termoaditivo.insert">insert into contrato_termo_aditivo(
+        cod_contrato,
+        dat_termo_aditivo,
+        des_observacao,
+        dat_inicio_historico,
+        dat_termino_historico
+        )values(
+        ?,
+        ?,
+        ?,
+        ?,
+        ?);</entry>
+    <entry key="termoaditivo.update">update contrato_termo_aditivo set 
+        cod_contrato = ?,
+        dat_termo_aditivo = ?,
+        des_observacao = ?,
+        dat_inicio_historico = ?,
+        dat_termino_historico = ?
+        where cod_termo_aditivo = ?;</entry>
+    <entry key="termoaditivo.delete">delete from contrato_termo_aditivo where cod_termo_aditivo = ?;</entry>
+    <entry key="termoaditivo.select">select * from contrato_termo_aditivo where cod_termo_aditivo = ?;</entry>
+    <entry key="termoaditivo.selectidcontrato">select * from contrato_termo_aditivo where cod_contrato = ?;</entry>
+    <entry key="termoaditivo.insertdocumento">insert into documento_digitalizado(cod_termo_aditivo, img_documento)values(
+        ?,
+        ?);</entry>
+    <entry key="termoaditivo.selectdocumento">select img_documento from documento_digitalizado where cod_termo_aditivo = ?;</entry>
+    
+</properties>
