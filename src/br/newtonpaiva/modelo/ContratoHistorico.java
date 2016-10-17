@@ -26,7 +26,7 @@ public class ContratoHistorico {
 
     private Integer id;
     private Contrato contrato;
-    private Situacao situacao;
+    private SituacaoContrato situacao;
     private Calendar data;
     private String observacao;
 
@@ -61,14 +61,14 @@ public class ContratoHistorico {
     /**
      * @return the situacao
      */
-    public Situacao getSituacao() {
+    public SituacaoContrato getSituacao() {
         return situacao;
     }
 
     /**
      * @param situacao the situacao to set
      */
-    public void setSituacao(Situacao situacao) {
+    public void setSituacao(SituacaoContrato situacao) {
         this.situacao = situacao;
     }
 
@@ -179,7 +179,7 @@ public class ContratoHistorico {
                     ContratoHistorico x = new ContratoHistorico();
                     x.setId(r.getInt(1));
                     x.setContrato(new Contrato().buscarPorId(r.getInt(2)));
-                    x.setSituacao(Situacao.values()[r.getInt(3)-1]);
+                    x.setSituacao(SituacaoContrato.values()[r.getInt(3)-1]);
                     x.setData(converter(r.getDate(4)));
                     x.setObservacao(r.getString(5));
                     lista.add(x);

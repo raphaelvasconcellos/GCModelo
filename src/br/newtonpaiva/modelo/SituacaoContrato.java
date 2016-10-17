@@ -9,7 +9,7 @@ package br.newtonpaiva.modelo;
  *
  * @author Tarley Lana
  */
-public enum Situacao {
+public enum SituacaoContrato {
        ANDAMENTO, 
        CANCELADO,        
        FINALIZADO;    

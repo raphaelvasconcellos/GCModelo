@@ -20,6 +20,5 @@ public enum Curso {
     FARMACIA,
     ODONTOLOGIA,
     PSICOLOGIA,
-    SISTEMA_INFORMACAO;
-    
+    SISTEMA_INFORMACAO;    
 }

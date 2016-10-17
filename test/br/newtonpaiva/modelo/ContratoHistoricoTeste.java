@@ -45,7 +45,7 @@ public class ContratoHistoricoTeste {
         
         ContratoHistorico a = new ContratoHistorico();
         a.setContrato(new Contrato().buscarPorId(31));        
-        a.setSituacao(Situacao.ANDAMENTO);
+        a.setSituacao(SituacaoContrato.ANDAMENTO);
         a.setData(dataTeste);
         a.setObservacao("Teste histórico");
         System.out.println(a.toString());

@@ -58,7 +58,7 @@ public class ContratoTest {
         a.setAluno(Aluno.buscarPorId(3));
         a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(Situacao.ANDAMENTO);
+        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);
@@ -109,7 +109,7 @@ public class ContratoTest {
         a.setAluno(Aluno.buscarPorId(3));
         a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(Situacao.ANDAMENTO);
+        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);
@@ -161,7 +161,7 @@ public class ContratoTest {
         a.setAluno(Aluno.buscarPorId(3));
         a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(Situacao.ANDAMENTO);
+        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);
@@ -215,7 +215,7 @@ public class ContratoTest {
         a.setAluno(Aluno.buscarPorId(3));
         a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(Situacao.ANDAMENTO);
+        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);
@@ -271,7 +271,7 @@ public class ContratoTest {
         a.setAluno(Aluno.buscarPorId(3));
         a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(Situacao.ANDAMENTO);
+        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);
@@ -324,7 +324,7 @@ public class ContratoTest {
         a.setAluno(Aluno.buscarPorId(8));
         a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(Situacao.ANDAMENTO);
+        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);
@@ -383,7 +383,7 @@ public class ContratoTest {
         a.setAluno(Aluno.buscarPorId(3));
         a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(Situacao.ANDAMENTO);
+        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);
@@ -410,7 +410,7 @@ public class ContratoTest {
             Calendar dataRescicao = Calendar.getInstance();
             dataRescicao.setTime(dateObj);
 
-            a.setSituacaoAtual(Situacao.CANCELADO);
+            a.setSituacaoAtual(SituacaoContrato.CANCELADO);
             a.setDataRescisao(dataRescicao);
             a.salvar(true);
             int numLinhasExcluidas = Contrato.excluir(a.getId());
@@ -449,7 +449,7 @@ public class ContratoTest {
         //a.setAluno(Aluno.buscarPorId(3));
         a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(Situacao.ANDAMENTO);
+        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);
@@ -496,7 +496,7 @@ public class ContratoTest {
         a.setAluno(Aluno.buscarPorId(3));
         //a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(Situacao.ANDAMENTO);
+        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);
@@ -543,7 +543,7 @@ public class ContratoTest {
         a.setAluno(Aluno.buscarPorId(3));
         a.setEmpresa(Empresa.buscarPorId(1));
         a.setTipo(TipoContrato.OBRIGATORIO);
-        //a.setSituacaoAtual(Situacao.ANDAMENTO);
+        //a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
         a.setNumProtocolo("123456");
         a.setDataEntrada(dataInicio);
         a.setDataInicio(dataInicio);

@@ -35,7 +35,7 @@ public class Contrato {
     private Aluno aluno;
     private TipoContrato tipo;
     private Empresa empresa;
-    private Situacao situacaoAtual;
+    private SituacaoContrato situacaoAtual;
     private String numProtocolo;
     private Calendar dataEntrada;
     private Calendar dataInicio;
@@ -117,14 +117,14 @@ public class Contrato {
     /**
      * @return the situacaoAtual
      */
-    public Situacao getSituacaoAtual() {
+    public SituacaoContrato getSituacaoAtual() {
         return situacaoAtual;
     }
 
     /**
      * @param situacaoAtual the situacaoAtual to set
      */
-    public void setSituacaoAtual(Situacao situacaoAtual) {
+    public void setSituacaoAtual(SituacaoContrato situacaoAtual) {
         this.situacaoAtual = situacaoAtual;
     }
 
@@ -557,7 +557,7 @@ public class Contrato {
                     c.setAluno(Aluno.buscarPorId(r.getInt(2)));
                     c.setEmpresa(Empresa.buscarPorId(r.getInt(3)));
                     c.setTipo(TipoContrato.values()[r.getInt(4) - 1]);
-                    c.setSituacaoAtual(Situacao.values()[r.getInt(5) - 1]);
+                    c.setSituacaoAtual(SituacaoContrato.values()[r.getInt(5) - 1]);
                     c.setNumProtocolo(r.getString(6));
                     c.setDataEntrada(converter(r.getDate(7)));
                     c.setDataInicio(converter(r.getDate(8)));
@@ -592,7 +592,7 @@ public class Contrato {
                     c.setAluno(Aluno.buscarPorId(r.getInt(2)));
                     c.setEmpresa(Empresa.buscarPorId(r.getInt(3)));
                     c.setTipo(TipoContrato.values()[r.getInt(4) - 1]);
-                    c.setSituacaoAtual(Situacao.values()[r.getInt(5) - 1]);
+                    c.setSituacaoAtual(SituacaoContrato.values()[r.getInt(5) - 1]);
                     c.setNumProtocolo(r.getString(6));
                     c.setDataEntrada(converter(r.getDate(7)));
                     c.setDataInicio(converter(r.getDate(8)));
@@ -626,7 +626,7 @@ public class Contrato {
                     c.setAluno(Aluno.buscarPorId(r.getInt(2)));
                     c.setEmpresa(Empresa.buscarPorId(r.getInt(3)));
                     c.setTipo(TipoContrato.values()[r.getInt(4) - 1]);
-                    c.setSituacaoAtual(Situacao.values()[r.getInt(5) - 1]);
+                    c.setSituacaoAtual(SituacaoContrato.values()[r.getInt(5) - 1]);
                     c.setNumProtocolo(r.getString(6));
                     c.setDataEntrada(converter(r.getDate(7)));
                     c.setDataInicio(converter(r.getDate(8)));
