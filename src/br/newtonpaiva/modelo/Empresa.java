@@ -2,6 +2,7 @@ package br.newtonpaiva.modelo;
 
 import br.newtonpaiva.modelo.excessoes.EmpresaInvalidaException;
 import static br.newtonpaiva.util.ConfigurationManager.*;
+import static br.newtonpaiva.util.CpfCnpjUtil.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,6 +31,25 @@ public class Empresa {
     private String contato;
     private String obs;
 
+    public Empresa() {
+        
+    }
+    
+    public Empresa(ResultSet rs) throws SQLException {
+        id = rs.getInt(1);
+        nome = rs.getString(2);
+        cnpj = rs.getString(3);
+        endereco = rs.getString(4);
+        bairro = rs.getString(5);
+        cep = rs.getString(6);
+        cidade = rs.getString(7);
+        uf = rs.getString(8);
+        email = rs.getString(9);
+        telefone = rs.getString(10);
+        contato = rs.getString(11);
+        obs = rs.getString(12);
+    }
+    
     public String getBairro() {
         return bairro;
     }
@@ -121,9 +141,13 @@ public class Empresa {
     public String getCnpj() {
         return cnpj;
     }
+    
+    public String getCnpjFormatado() {
+        return formatarCpfCnpj(cnpj);
+    }
 
     public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
+        this.cnpj = removerFormatacaoCpfCnpj(cnpj);
     }
 
     @Override
@@ -201,28 +225,14 @@ public class Empresa {
 
     public static Empresa buscarPorId(Integer id) throws SQLException {
         try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                PreparedStatement s = c.prepareStatement(appSettings("empresa.selectid"))) {
+                PreparedStatement s = c.prepareStatement(appSettings("empresa.select.id"))) {
 
             s.setInt(1, id);
 
             try (ResultSet r = s.executeQuery()) {
 
                 if (r.next()) {
-                    Empresa u = new Empresa();
-                    u.setId(r.getInt(1));
-                    u.setNome(r.getString(2));
-                    u.setCnpj(r.getString(3));
-                    u.setEndereco(r.getString(4));
-                    u.setBairro(r.getString(5));
-                    u.setCep(r.getString(6));
-                    u.setCidade(r.getString(7));
-                    u.setUf(r.getString(8));
-                    u.setEmail(r.getString(9));
-                    u.setTelefone(r.getString(10));
-                    u.setContato(r.getString(11));
-                    u.setObs(r.getString(12));
-
-                    return u;
+                    return new Empresa(r);
                 } else {
                     return null;
                 }
@@ -231,6 +241,22 @@ public class Empresa {
         }
     }
 
+    public static Empresa buscarPorCNPJ(String cnpj) throws SQLException {
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement s = c.prepareStatement(appSettings("empresa.select.cnpj"))) {
+
+            s.setString(1, removerFormatacaoCpfCnpj(cnpj));
+
+            try (ResultSet r = s.executeQuery()) {
+                if (r.next()) {
+                    return new Empresa(r);
+                } else {
+                    return null;
+                }
+            }
+        }
+    }
+    
     public static List<Empresa> buscarTodos() throws SQLException {
         try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement s = c.prepareStatement(appSettings("empresa.select"))) {
@@ -239,27 +265,31 @@ public class Empresa {
                 List<Empresa> lista = new ArrayList<>();
 
                 while (r.next()) {
-                    Empresa u = new Empresa();
-                    u.setId(r.getInt(1));
-                    u.setNome(r.getString(2));
-                    u.setCnpj(r.getString(3));
-                    u.setEndereco(r.getString(4));
-                    u.setBairro(r.getString(5));
-                    u.setCep(r.getString(6));
-                    u.setCidade(r.getString(7));
-                    u.setUf(r.getString(8));
-                    u.setEmail(r.getString(9));
-                    u.setTelefone(r.getString(10));
-                    u.setContato(r.getString(11));
-                    u.setObs(r.getString(12));
+                    Empresa u = new Empresa(r);                    
                     lista.add(u);
-
                 }
-
+                
                 return lista;
             }
         }
-
     }
+    
+    public static List<Empresa> buscarPorNome(String nome) throws SQLException {
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement s = c.prepareStatement(appSettings("empresa.select.nome"))) {
 
+            s.setString(1, "%" + nome + "%");
+            
+            try (ResultSet r = s.executeQuery()) {
+                List<Empresa> lista = new ArrayList<>();
+
+                while (r.next()) {
+                    Empresa u = new Empresa(r);                    
+                    lista.add(u);
+                }
+                
+                return lista;
+            }
+        }
+    }
 }

@@ -5,9 +5,9 @@
  */
 package br.newtonpaiva.modelo;
 
-import br.newtonpaiva.modelo.excessoes.LoginException;
-import br.newtonpaiva.modelo.excessoes.SenhaException;
-import br.newtonpaiva.modelo.excessoes.UsuarioInvalidoException;
+import br.newtonpaiva.modelo.excecoes.LoginException;
+import br.newtonpaiva.modelo.excecoes.SenhaException;
+import br.newtonpaiva.modelo.excecoes.UsuarioInvalidoException;
 import java.util.Objects;
 import java.sql.Connection;
 import java.sql.DriverManager;

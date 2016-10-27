@@ -101,41 +101,6 @@ and open the template in the editor.
         des_observacao
         )
         values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-    </entry>    
-    
-    <entry key="empresa.delete">delete from empresa where cod_empresa = ? </entry>    
-    
-    <entry key="empresa.selectall">select  
-        cod_empresa,
-        nom_empresa,
-        num_cnpj, 
-        des_endereco,
-        nom_bairro,
-        num_cep,
-        nom_cidade,
-        des_uf,
-        des_email,
-        num_telefone,
-        nom_contato,
-        des_observacao
-        from empresa
-    </entry>   
-     
-    <entry key="empresa.select">
-        select  cod_empresa,
-        nom_empresa,
-        num_cnpj, 
-        des_endereco,
-        nom_bairro,
-        num_cep,
-        nom_cidade,
-        des_uf,
-        des_email,
-        num_telefone,
-        nom_contato,
-        des_observacao
-        from empresa
-        where cod_empresa = ?;
     </entry>
     
     <entry key="empresa.update">
@@ -152,6 +117,74 @@ and open the template in the editor.
         nom_contato=?,
         des_observacao=?
         where cod_empresa = ?
+    </entry>
+    
+    <entry key="empresa.delete">delete from empresa where cod_empresa = ? </entry>    
+    
+    <entry key="empresa.select">
+        select  cod_empresa,
+                nom_empresa,
+                num_cnpj, 
+                des_endereco,
+                nom_bairro,
+                num_cep,
+                nom_cidade,
+                des_uf,
+                des_email,
+                num_telefone,
+                nom_contato,
+                des_observacao
+          from  empresa
+    </entry>   
+     
+    <entry key="empresa.select.id">
+        select  cod_empresa,
+                nom_empresa,
+                num_cnpj, 
+                des_endereco,
+                nom_bairro,
+                num_cep,
+                nom_cidade,
+                des_uf,
+                des_email,
+                num_telefone,
+                nom_contato,
+                des_observacao
+           from empresa
+          where cod_empresa = ?;
+    </entry>
+    
+    <entry key="empresa.select.cnpj">
+        select  cod_empresa,
+                nom_empresa,
+                num_cnpj, 
+                des_endereco,
+                nom_bairro,
+                num_cep,
+                nom_cidade,
+                des_uf,
+                des_email,
+                num_telefone,
+                nom_contato,
+                des_observacao
+           from empresa
+          where num_cnpj = ?;
+    </entry>
+    <entry key="empresa.select.nome">
+        select  cod_empresa,
+                nom_empresa,
+                num_cnpj, 
+                des_endereco,
+                nom_bairro,
+                num_cep,
+                nom_cidade,
+                des_uf,
+                des_email,
+                num_telefone,
+                nom_contato,
+                des_observacao
+           from empresa
+          where nom_empresa like ?;
     </entry>
     
     <entry key="convenio.insert">
