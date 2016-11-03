@@ -6,10 +6,11 @@
             <name>GCModelo</name>
             <source-roots>
                 <root id="src.dir"/>
-                <root id="src.resources.dir" name="Pacotes de Recursos"/>
+                <root id="src.src-resources.dir" name="Pacotes de Recursos"/>
             </source-roots>
             <test-roots>
                 <root id="test.src.dir"/>
+                <root id="test.test-resources.dir" name="Pacotes de Recursos de Teste"/>
             </test-roots>
         </data>
     </configuration>

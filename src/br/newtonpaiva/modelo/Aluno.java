@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static br.newtonpaiva.util.CpfCnpjUtil.*;
 /**
  *
  * @author tarle
@@ -31,6 +32,20 @@ public class Aluno {
     private Curso curso;
     private String deficiente;
     private List<Contrato> contratos;
+
+    public Aluno() {
+
+    }
+
+    public Aluno(ResultSet r) throws SQLException {
+        id = r.getInt(1);
+        curso = Curso.values()[r.getInt(2)];
+        ra = r.getString(3);
+        nome = r.getString(4);
+        cpf = r.getString(5);
+        email = r.getString(6);
+        deficiente = r.getString(7);
+    }
 
     /**
      * @return the id
@@ -161,9 +176,9 @@ public class Aluno {
 
         if (getId() == null) {
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                    PreparedStatement stm = con.prepareStatement(appSettings("usuario.insert"), Statement.RETURN_GENERATED_KEYS)) {
+                    PreparedStatement stm = con.prepareStatement(appSettings("aluno.insert"), Statement.RETURN_GENERATED_KEYS)) {
 
-                stm.setInt(1, getCurso().ordinal() + 1);
+                stm.setInt(1, getCurso().ordinal());
                 stm.setString(2, getRa());
                 stm.setString(3, getNome());
                 stm.setString(4, getEmail());
@@ -178,14 +193,13 @@ public class Aluno {
                 } else {
                     throw new SQLException("Não foi possivel inserir o usuario");
                 }
-
             }
         } else {
             try (Connection con = DriverManager.getConnection(
                     DB_URL, DB_USUARIO, DB_SENHA);
                     PreparedStatement stm = con.prepareStatement(appSettings("aluno.update"))) {
 
-                stm.setInt(1, getCurso().ordinal() + 1);
+                stm.setInt(1, getCurso().ordinal());
                 stm.setString(2, getRa());
                 stm.setString(3, getNome());
                 stm.setString(4, getEmail());
@@ -196,7 +210,6 @@ public class Aluno {
                 stm.executeUpdate();
             }
         }
-
     }
 
     public static int excluir(Integer id) throws AlunoInvalidoException, SQLException {
@@ -205,69 +218,83 @@ public class Aluno {
 
             s.setInt(1, id);
             return s.executeUpdate();
-
         }
-
     }
 
     public static Aluno buscarPorId(Integer id) throws SQLException {
         try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                PreparedStatement s = c.prepareStatement(appSettings("aluno.selectid"))) {
+                PreparedStatement s = c.prepareStatement(appSettings("aluno.select.id"))) {
 
             s.setInt(1, id);
 
             try (ResultSet r = s.executeQuery()) {
 
-                if (r.next()) {
-                    Aluno a = new Aluno();
-                    a.setId(r.getInt(1));
-                    a.setCurso(Curso.values()[r.getInt(2) - 1]);
-                    a.setRa(r.getString(3));
-                    a.setNome(r.getString(4));
-                    a.setCpf(r.getString(5));
-                    a.setEmail(r.getString(6));
-                    a.setDeficiente(r.getString(7));
-
-                    return a;
-                } else {
+                if (r.next())
+                    return new Aluno(r);
+                else
                     return null;
-                }
+            }
+        }
+    }
+    
+    public static Aluno buscarPorRA(String ra) throws SQLException {
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement s = c.prepareStatement(appSettings("aluno.select.ra"))) {
+
+            s.setString(1, ra);
+
+            try (ResultSet r = s.executeQuery()) {
+                if (r.next())
+                    return new Aluno(r);
+                else
+                    return null;
+            }
+        }
+    }
+    
+    public static Aluno buscarPorCPF(String cpf) throws SQLException {
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement s = c.prepareStatement(appSettings("aluno.select.cpf"))) {
+
+            s.setString(1, removerFormatacaoCpfCnpj(cpf));
+
+            try (ResultSet r = s.executeQuery()) {
+                if (r.next())
+                    return new Aluno(r);
+                else
+                    return null;
             }
         }
     }
 
-    public List<Aluno> buscarTodos() throws SQLException {
+    public static List<Aluno> buscarTodos() throws SQLException {
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(appSettings("aluno.select"))) {
 
             try (ResultSet r = stm.executeQuery()) {
                 List<Aluno> lista = new ArrayList();
                 while (r.next()) {
-                    Aluno a = new Aluno();
-                    a.setId(r.getInt(1));
-                    a.setCurso(Curso.values()[r.getInt(2) - 1]);
-                    a.setRa(r.getString(3));
-                    a.setNome(r.getString(4));
-                    a.setCpf(r.getString(5));
-                    a.setEmail(r.getString(6));
-                    a.setDeficiente(r.getString(7));
-                    lista.add(a);
+                    lista.add(new Aluno(r));
                 }
                 return lista;
             }
         }
     }
+    
+    public static List<Aluno> buscarPorNome(String nome) throws SQLException {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement stm = con.prepareStatement(appSettings("aluno.select.nome"))) {
 
-    private String getString(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private Integer getInt(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    private void setCurso(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            stm.setString(1, "%" + nome + "%");
+            
+            try (ResultSet r = stm.executeQuery()) {
+                List<Aluno> lista = new ArrayList();
+                while (r.next()) {
+                    lista.add(new Aluno(r));
+                }
+                return lista;
+            }
+        }
     }
 
     /**
@@ -278,10 +305,17 @@ public class Aluno {
     }
 
     /**
+     * @return the cpf
+     */
+    public String getCpfFormatado() {
+        return formatarCpfCnpj(cpf);
+    }
+
+    /**
      * @param cpf the cpf to set
      */
     public void setCpf(String cpf) {
-        this.cpf = cpf;
+        this.cpf = removerFormatacaoCpfCnpj(cpf);
     }
 
     /**

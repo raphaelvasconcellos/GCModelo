@@ -333,12 +333,13 @@ public class Contrato {
                             appSettings("contrato.select.horas.diarias"))) {
                 stm.setInt(1, idAluno);
                 try (ResultSet r = stm.executeQuery()) {
-                    if (r.next())                         
+                    if (r.next()) {
                         return r.getDouble(1);
-                    else
-                        return 0.0;                    
+                    } else {
+                        return 0.0;
+                    }
                 }
-            }            
+            }
         } else {
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                     PreparedStatement stm = con.prepareStatement(
@@ -346,28 +347,30 @@ public class Contrato {
                 stm.setInt(1, idAluno);
                 stm.setInt(2, idContrato);
                 try (ResultSet r = stm.executeQuery()) {
-                    if (r.next())                         
+                    if (r.next()) {
                         return r.getDouble(1);
-                    else
-                        return 0.0;                    
+                    } else {
+                        return 0.0;
+                    }
                 }
             }
         }
     }
-    
-     public Double buscarTotalHorasSemanaisAluno(Integer idAluno, Integer idContrato) throws SQLException {
+
+    public Double buscarTotalHorasSemanaisAluno(Integer idAluno, Integer idContrato) throws SQLException {
         if (idContrato == null) {
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                     PreparedStatement stm = con.prepareStatement(
                             appSettings("contrato.select.horas.semanais"))) {
                 stm.setInt(1, idAluno);
                 try (ResultSet r = stm.executeQuery()) {
-                    if (r.next())                         
+                    if (r.next()) {
                         return r.getDouble(1);
-                    else
-                        return 0.0;                    
+                    } else {
+                        return 0.0;
+                    }
                 }
-            }            
+            }
         } else {
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                     PreparedStatement stm = con.prepareStatement(
@@ -375,29 +378,31 @@ public class Contrato {
                 stm.setInt(1, idAluno);
                 stm.setInt(2, idContrato);
                 try (ResultSet r = stm.executeQuery()) {
-                    if (r.next())                         
+                    if (r.next()) {
                         return r.getDouble(1);
-                    else
-                        return 0.0;                    
+                    } else {
+                        return 0.0;
+                    }
                 }
             }
         }
     }
-     
-    public Integer buscarTempoCotratoAlunoEmpresa(Integer idAluno, Integer idEmpresa, Integer idContrato) throws SQLException{
-       if (idContrato == null) {
+
+    public Integer buscarTempoCotratoAlunoEmpresa(Integer idAluno, Integer idEmpresa, Integer idContrato) throws SQLException {
+        if (idContrato == null) {
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                     PreparedStatement stm = con.prepareStatement(
                             appSettings("contrato.select.tempo.contrato.aluno.empresa"))) {
                 stm.setInt(1, idAluno);
                 stm.setInt(2, idEmpresa);
                 try (ResultSet r = stm.executeQuery()) {
-                    if (r.next())                         
+                    if (r.next()) {
                         return r.getInt(1);
-                    else
-                        return 0;                    
+                    } else {
+                        return 0;
+                    }
                 }
-            }            
+            }
         } else {
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                     PreparedStatement stm = con.prepareStatement(
@@ -406,13 +411,14 @@ public class Contrato {
                 stm.setInt(2, idEmpresa);
                 stm.setInt(3, idContrato);
                 try (ResultSet r = stm.executeQuery()) {
-                    if (r.next())                         
+                    if (r.next()) {
                         return r.getInt(1);
-                    else
+                    } else {
                         return 0;
+                    }
                 }
             }
-        } 
+        }
     }
 
     public void salvar(Boolean validaHoras) throws ContratoInvalidoException, SQLException {
@@ -427,19 +433,19 @@ public class Contrato {
         }
 
         if (validaHoras) {
-            Double totalHoraDiaria = buscarTotalHorasDiariasAluno(getAluno().getId(),getId());           
-            Double totalHoraSemanal = buscarTotalHorasSemanaisAluno(getAluno().getId(), getId());            
+            Double totalHoraDiaria = buscarTotalHorasDiariasAluno(getAluno().getId(), getId());
+            Double totalHoraSemanal = buscarTotalHorasSemanaisAluno(getAluno().getId(), getId());
             if ((totalHoraDiaria + valorCargaHorariaDiaria.doubleValue()) > 6.0) {
                 throw new ContratoInvalidoException("A carga horária diária nao deve exceder 6 horas");
             }
             if ((totalHoraSemanal + valorCargaHorariaSemanal.doubleValue()) > 30.0) {
                 throw new ContratoInvalidoException("A carga horária semanal nao deve exceder 30 horas");
             }
-        }        
+        }
         if ("N".equals(getAluno().getDeficiente())) {
             Integer difDay = getDifferenceDays(converter(getDataInicio()), converter(getDataTermino()));
-            Integer diasAntigos = buscarTempoCotratoAlunoEmpresa(getAluno().getId(), getEmpresa().getId(), getId());            
-            if (diasAntigos+difDay > 731) {
+            Integer diasAntigos = buscarTempoCotratoAlunoEmpresa(getAluno().getId(), getEmpresa().getId(), getId());
+            if (diasAntigos + difDay > 731) {
                 throw new ContratoInvalidoException("O aluno não pode ter mais que dois anos de contrato na mesma empresa");
             }
         }
@@ -448,7 +454,7 @@ public class Contrato {
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                     PreparedStatement stm = con.prepareStatement(
                             appSettings("contrato.insert"), Statement.RETURN_GENERATED_KEYS)) {
-                
+
                 stm.setInt(1, getAluno().getId());
                 stm.setInt(2, getEmpresa().getId());
                 stm.setInt(3, getTipo().ordinal() + 1);
@@ -457,10 +463,11 @@ public class Contrato {
                 stm.setDate(6, converter(getDataEntrada()));
                 stm.setDate(7, converter(getDataInicio()));
                 stm.setDate(8, converter(getDataTermino()));
-                if (getDataRescisao() == null)
+                if (getDataRescisao() == null) {
                     stm.setNull(9, 0);
-                else
+                } else {
                     stm.setDate(9, converter(getDataRescisao()));
+                }
                 stm.setDouble(10, getValorBolsa().doubleValue());
                 stm.setDouble(11, getAuxilioTransporte().doubleValue());
                 stm.setDouble(12, getValorCargaHorariaDiaria().doubleValue());
@@ -489,10 +496,11 @@ public class Contrato {
                 stm.setDate(6, converter(getDataEntrada()));
                 stm.setDate(7, converter(getDataInicio()));
                 stm.setDate(8, converter(getDataTermino()));
-                if (getDataRescisao() == null)
+                if (getDataRescisao() == null) {
                     stm.setNull(9, 0);
-                else
+                } else {
                     stm.setDate(9, converter(getDataRescisao()));
+                }
                 stm.setDouble(10, getValorBolsa().doubleValue());
                 stm.setDouble(11, getAuxilioTransporte().doubleValue());
                 stm.setDouble(12, getValorCargaHorariaDiaria().doubleValue());
@@ -516,14 +524,22 @@ public class Contrato {
         }
     }
 
-    public void anexarDocumento(String nomeArquivo) throws FileNotFoundException, SQLException {
+    public int anexarDocumento(String nomeArquivo) throws FileNotFoundException, SQLException {
         FileInputStream in = new FileInputStream(nomeArquivo);
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(
-                        appSettings("documento.digitalizado.insert"))) {
+                        appSettings("documento.digitalizado.insert"),
+                        Statement.RETURN_GENERATED_KEYS)) {
             stm.setInt(1, getId());
             stm.setBlob(2, in);
             stm.executeUpdate();
+            
+            ResultSet rs = stm.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            } else {
+                throw new SQLException("Não foi possivel anexar o documento");
+            }
         }
     }
 

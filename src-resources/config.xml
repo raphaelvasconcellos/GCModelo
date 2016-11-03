@@ -16,11 +16,8 @@ and open the template in the editor.
             des_login, 
             cod_senha, 
             des_email)
-        values(
-            ?,
-            ?,
-            ?,
-            ?);</entry>
+        values(?, ?, ?, ?);
+    </entry>
     <entry key="usuario.update">
         update usuario set 
             nom_usuario = ?, 
@@ -30,60 +27,103 @@ and open the template in the editor.
         where cod_usuario = ?;</entry>
     <entry key="usuario.delete">delete from usuario where cod_usuario = ?;</entry>
     <entry key="usuario.select.id">
-        select 
-            cod_usuario, 
-            nom_usuario, 
-            des_login, 
-            des_email 
-
-        from usuario
-        
-        where cod_usuario = ?;</entry>
+        select  cod_usuario, 
+                nom_usuario, 
+                des_login, 
+                des_email
+           from usuario
+          where cod_usuario = ?;</entry>
     <entry key="usuario.select.login">
         select cod_senha
-        from usuario
-        where des_login = ?
+          from usuario
+         where des_login = ?
     </entry>
-   
     <entry key="usuario.select">
-        select 
-        cod_usuario, 
-        nom_usuario, 
-        des_login, 
-        des_email
-
-        from usuario;
+        select  cod_usuario, 
+                nom_usuario, 
+                des_login, 
+                des_email
+           from usuario;
     </entry>                                 
                                     
                                     
-    <entry key="aluno.insert"> insert into aluno(        
-        cod_curso,
-        num_ra,
-        nom_aluno,
-        des_email,
-        num_cpf_aluno,
-        ind_deficiente
-        )values(        
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,                                
-        ?);</entry>
+    <entry key="aluno.insert"> 
+        insert into aluno(        
+            cod_curso,
+            num_ra,
+            nom_aluno,
+            des_email,
+            num_cpf_aluno,
+            ind_deficiente
+        ) values( ?, ?, ?, ?, ?, ?)
+    </entry>
                                     
-    <entry key="aluno.update">update aluno set         
-        cod_curso = ?,
-        num_ra = ?,
-        nom_aluno = ?,
-        num_cpf_aluno = ?,
-        des_email = ?,        
-        ind_deficiente = ?
-        where cod_aluno = ?;</entry>
+    <entry key="aluno.update">
+        update aluno
+           set cod_curso = ?,
+               num_ra = ?,
+               nom_aluno = ?,
+               des_email = ?,
+               num_cpf_aluno = ?,
+               ind_deficiente = ?
+         where cod_aluno = ?
+    </entry>
         
     <entry key="aluno.delete">delete from aluno where cod_aluno = ?;</entry>
-    <entry key="aluno.select">select * from aluno;</entry>
-    <entry key="aluno.selectid">select * from aluno where cod_aluno = ?;</entry>
-                                     
+    <entry key="aluno.select">
+        SELECT  COD_ALUNO, 
+                COD_CURSO, 
+                NUM_RA, 
+                NOM_ALUNO, 
+                NUM_CPF_ALUNO, 
+                DES_EMAIL, 
+                IND_DEFICIENTE 
+           FROM aluno
+    </entry>
+    <entry key="aluno.select.id">
+        SELECT  COD_ALUNO, 
+                COD_CURSO, 
+                NUM_RA, 
+                NOM_ALUNO, 
+                NUM_CPF_ALUNO, 
+                DES_EMAIL, 
+                IND_DEFICIENTE 
+           FROM aluno
+          WHERE COD_ALUNO = ?
+    </entry>
+    <entry key="aluno.select.ra">
+        SELECT  COD_ALUNO, 
+                COD_CURSO, 
+                NUM_RA, 
+                NOM_ALUNO, 
+                NUM_CPF_ALUNO, 
+                DES_EMAIL, 
+                IND_DEFICIENTE 
+           FROM aluno
+          WHERE NUM_RA = ?
+    </entry>
+    <entry key="aluno.select.nome">
+        SELECT  COD_ALUNO, 
+                COD_CURSO, 
+                NUM_RA, 
+                NOM_ALUNO, 
+                NUM_CPF_ALUNO, 
+                DES_EMAIL, 
+                IND_DEFICIENTE 
+           FROM aluno
+          WHERE NOM_ALUNO LIKE ?
+    </entry>
+    <entry key="aluno.select.cpf">
+        SELECT  COD_ALUNO, 
+                COD_CURSO, 
+                NUM_RA, 
+                NOM_ALUNO, 
+                NUM_CPF_ALUNO, 
+                DES_EMAIL, 
+                IND_DEFICIENTE 
+           FROM aluno
+          WHERE NUM_CPF_ALUNO = ?
+    </entry>                       
                                                     
     <entry key="empresa.insert">
         insert into empresa
@@ -379,13 +419,17 @@ and open the template in the editor.
         from contrato 
         where cod_aluno =? and cod_empresa = ? and cod_contrato not in (?);
     </entry>
-    
-    
-    
-    <entry key="contrato.insertdocumento">insert into documento_digitalizado(cod_contrato, img_documento)values(
-        ?,
-        ?);</entry>
-    <entry key="contrato.selectdocumento">select img_documento from documento_digitalizado where cod_contrato = ?;</entry>
+    <entry key="documento.digitalizado.insert">
+        insert into documento_digitalizado(
+            cod_contrato, 
+            img_documento
+        ) values( ?, ?);
+    </entry>
+    <entry key="contrato.selectdocumento">
+        select img_documento 
+          from documento_digitalizado 
+         where cod_contrato = ?;
+    </entry>
     
     
     <entry key="contratohistorico.insert"> insert into contrato_situacao_historico(        
