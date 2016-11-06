@@ -5,6 +5,7 @@
  */
 
 import br.newtonpaiva.modelo.AlunoTest;
+import br.newtonpaiva.modelo.ContratoTest;
 import br.newtonpaiva.modelo.EmpresaTest;
 import br.newtonpaiva.modelo.UsuarioTest;
 import static br.newtonpaiva.util.ConfigurationManager.DB_SENHA;
@@ -29,7 +30,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({CpfCnpjUtilTest.class, UsuarioTest.class,
-    EmpresaTest.class, AlunoTest.class})
+    EmpresaTest.class, AlunoTest.class, ContratoTest.class})
 public class TestSuite {
 
     @BeforeClass

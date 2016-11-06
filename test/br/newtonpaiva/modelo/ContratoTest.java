@@ -6,7 +6,9 @@
 package br.newtonpaiva.modelo;
 
 import br.newtonpaiva.modelo.excessoes.ContratoInvalidoException;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -14,11 +16,21 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.Assert;
+import java.util.stream.Collectors;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
+
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.BeforeClass;
+
 
 /**
  *
@@ -26,269 +38,112 @@ import org.junit.Test;
  */
 public class ContratoTest {
 
+    @Rule
+    public TemporaryFolder temp = new TemporaryFolder();
+            
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() throws IOException {
+        
+    }
+    
+    @After
+    public void tearDown() {
+        
+    }
+    
     /**
      * Testar quantidade de horas semanais maior que 30.
+     *
      * @throws java.sql.SQLException
      * @throws br.newtonpaiva.modelo.excessoes.ContratoInvalidoException
+     * @throws java.text.ParseException
      */
-    @Test(expected = ContratoInvalidoException.class)
-    public void testeMaisQue30HorasSemanais() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
+    public void testeMaisQue30HorasSemanais() throws SQLException, ContratoInvalidoException, ParseException {
+        Contrato c = new Contrato();
+        c.setAluno(Aluno.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setTipo(TipoContrato.OBRIGATORIO);
+        c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
+        c.setNumProtocolo("123456");
+        c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataTermino(new GregorianCalendar(2017, Calendar.MARCH, 1));
+        c.setValorBolsa(BigDecimal.valueOf(300.0));
+        c.setAuxilioTransporte(BigDecimal.valueOf(80.0));
+        c.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
+        c.setValorCargaHorariaSemanal(BigDecimal.valueOf(36.0));
+        c.setObservacao("Teste");
+        c.setIndAlunoContratado("N");
+        
         try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
-
-        dateStr = "01/03/2017";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
-
-        Contrato a = new Contrato();
-        a.setAluno(Aluno.buscarPorId(3));
-        a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(36.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
-
-        try {
-            a.salvar(true);           
-        } catch (ContratoInvalidoException | SQLException ex) {
-            throw (new ContratoInvalidoException(ex.getMessage()));
+            c.salvar();
+        } catch(ContratoInvalidoException e) {
+            assertEquals("A carga horária semanal nao deve exceder 30 horas", e.getMessage());
         }
     }
 
-    /**
-     * Testar quantidade de horas diarias maior que 6.
-     * @throws java.sql.SQLException
-     * @throws br.newtonpaiva.modelo.excessoes.ContratoInvalidoException
-     */
-    @Test(expected = ContratoInvalidoException.class)
-    public void testeMaisQue6HorasDiarias() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
+    public void testeMaisQue6HorasDiarias() throws SQLException, ContratoInvalidoException, ParseException {
+        Contrato c = new Contrato();
+        c.setAluno(Aluno.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setTipo(TipoContrato.OBRIGATORIO);
+        c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
+        c.setNumProtocolo("123456");
+        c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataTermino(new GregorianCalendar(2017, Calendar.MARCH, 1));
+        c.setValorBolsa(BigDecimal.valueOf(300.0));
+        c.setAuxilioTransporte(BigDecimal.valueOf(80.0));
+        c.setValorCargaHorariaDiaria(BigDecimal.valueOf(8.0));
+        c.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
+        c.setObservacao("Teste");
+        c.setIndAlunoContratado("N");
+        
         try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
+            c.salvar();
+        }catch(ContratoInvalidoException e) {
+            assertEquals("A carga horária diária não deve exceder 6 horas", e.getMessage());
         }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
-
-        dateStr = "01/03/2017";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
-
-        Contrato a = new Contrato();
-        a.setAluno(Aluno.buscarPorId(3));
-        a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(8.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
-
-        try {
-            a.salvar(true);           
-        } catch (ContratoInvalidoException | SQLException ex) {
-            throw (new ContratoInvalidoException(ex.getMessage()));
-        }
-
-    }
-
-    /**
-     * Testar quantidade de horas semanais maior que 30 Aula Prática.
-     * @throws java.sql.SQLException
-     * @throws br.newtonpaiva.modelo.excessoes.ContratoInvalidoException
-     */
-    @Test
-    public void testeMaisQue30HorasSemanaisPratica() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
-
-        dateStr = "01/03/2017";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
-
-        Contrato a = new Contrato();
-        a.setAluno(Aluno.buscarPorId(3));
-        a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(36.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
-
-        try {
-            a.salvar(false);  
-            Assert.assertNotNull(a.getId());
-            int numLinhasExcluidas = Contrato.excluir(a.getId());
-            Assert.assertEquals(1, numLinhasExcluidas);
-
-        } catch (ContratoInvalidoException | SQLException ex) {
-            throw (new ContratoInvalidoException(ex.getMessage()));
-        }
-
-    }
-
-    /**
-     * Testar quantidade de horas diarias maior que 6 Aula Prática.
-     */
-    @Test
-    public void testeMaisQue6HorasDiariasPratica() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
-
-        dateStr = "01/03/2017";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
-
-        Contrato a = new Contrato();
-        a.setAluno(Aluno.buscarPorId(3));
-        a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(8.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
-
-        try {
-            a.salvar(false);  
-            Assert.assertNotNull(a.getId());
-            int numLinhasExcluidas = Contrato.excluir(a.getId());
-            Assert.assertEquals(1, numLinhasExcluidas);
-
-        } catch (ContratoInvalidoException | SQLException ex) {
-            throw (new ContratoInvalidoException(ex.getMessage()));
-        }
-
     }
 
     /**
      * Testar prazo maior que dois anos para nao deficiente.
+     *
      * @throws java.sql.SQLException
      * @throws br.newtonpaiva.modelo.excessoes.ContratoInvalidoException
+     * @throws java.text.ParseException
      */
-    @Test(expected = ContratoInvalidoException.class)
-    public void testeMaisDoisAnos() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
+    @Test
+    public void testeMaisDoisAnosParaAlunoNaoDeficiente() throws SQLException, ContratoInvalidoException, ParseException {
+        Contrato c = new Contrato();
+        c.setAluno(Aluno.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setTipo(TipoContrato.OBRIGATORIO);
+        c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
+        c.setNumProtocolo("123456");
+        c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataTermino(new GregorianCalendar(2019, Calendar.JANUARY, 2));
+        c.setValorBolsa(BigDecimal.valueOf(300.0));
+        c.setAuxilioTransporte(BigDecimal.valueOf(80.0));
+        c.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
+        c.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
+        c.setObservacao("Teste");
+        c.setIndAlunoContratado("N");
+        
         try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
+            c.salvar();
+        }catch(ContratoInvalidoException e) {
+            assertEquals("O aluno não pode ter mais que dois anos de contrato na mesma empresa", e.getMessage());
         }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
-
-        dateStr = "01/01/2020";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
-
-        Contrato a = new Contrato();
-        a.setAluno(Aluno.buscarPorId(3));
-        a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
-
-        try {
-            a.salvar(true);           
-        } catch (ContratoInvalidoException | SQLException ex) {
-           throw (new ContratoInvalidoException(ex.getMessage()));
-        }
-
     }
 
     /**
@@ -296,59 +151,32 @@ public class ContratoTest {
      *
      * @throws java.sql.SQLException
      * @throws br.newtonpaiva.modelo.excessoes.ContratoInvalidoException
+     * @throws java.text.ParseException
      */
     @Test
-    public void testeMaisDoisAnosDeficiente() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
+    public void testeMaisDoisAnosDeficiente() throws SQLException, ContratoInvalidoException, ParseException {
+        Contrato c = new Contrato();
+        c.setAluno(Aluno.buscarPorId(2));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setTipo(TipoContrato.OBRIGATORIO);
+        c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
+        c.setNumProtocolo("123456");
+        c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataTermino(new GregorianCalendar(2019, Calendar.JANUARY, 2));
+        c.setValorBolsa(BigDecimal.valueOf(300.0));
+        c.setAuxilioTransporte(BigDecimal.valueOf(80.0));
+        c.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
+        c.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
+        c.setObservacao("Teste");
+        c.setIndAlunoContratado("N");
 
-        dateStr = "01/01/2020";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
-
-        Contrato a = new Contrato();
-        a.setAluno(Aluno.buscarPorId(8));
-        a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
-
-        try {
-            a.salvar(true);
-            Assert.assertNotNull(a.getId());
-            int numLinhasExcluidas = Contrato.excluir(a.getId());
-            Assert.assertEquals(1, numLinhasExcluidas);
-
-        } catch (ContratoInvalidoException | SQLException ex) {
-            throw (new ContratoInvalidoException(ex.getMessage()));
-        }
-
+        c.salvar();
+        assertNotNull(c.getId());
+        
+        int numLinhasExcluidas = Contrato.excluir(c.getId());
+        assertEquals(1, numLinhasExcluidas);
     }
-    
-    
 
     /**
      * Test of salvar method, of class Contrato.
@@ -357,259 +185,240 @@ public class ContratoTest {
      * @throws br.newtonpaiva.modelo.excessoes.ContratoInvalidoException
      */
     @Test
-    public void testSalvar() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
+    public void testSalvarSucesso() throws SQLException, ContratoInvalidoException {
+        Contrato c = new Contrato();
+        c.setAluno(Aluno.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setTipo(TipoContrato.OBRIGATORIO);
+        c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
+        c.setNumProtocolo("123456");
+        c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataTermino(new GregorianCalendar(2017, Calendar.MARCH, 1));
+        c.setValorBolsa(BigDecimal.valueOf(300.0));
+        c.setAuxilioTransporte(BigDecimal.valueOf(80.0));
+        c.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
+        c.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
+        c.setObservacao("Teste");
+        c.setIndAlunoContratado("N");
 
-        dateStr = "01/03/2017";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
+        c.salvar();
+        assertNotNull(c.getId());
 
-        Contrato a = new Contrato();
-        a.setAluno(Aluno.buscarPorId(3));
-        a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
-
-        try {
-            System.out.println(a.toString());
-            a.salvar(true);
-            Assert.assertNotNull(a.getId());
-
-            dateStr = "25/01/2017";
-            dateObj = null;
-            try {
-                dateObj = (Date) curFormater.parse(dateStr);
-            } catch (ParseException ex) {
-                Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Calendar dataRescicao = Calendar.getInstance();
-            dataRescicao.setTime(dateObj);
-
-            a.setSituacaoAtual(SituacaoContrato.CANCELADO);
-            a.setDataRescisao(dataRescicao);
-            a.salvar(true);
-            int numLinhasExcluidas = Contrato.excluir(a.getId());
-            Assert.assertEquals(1, numLinhasExcluidas);
-
-        } catch (ContratoInvalidoException | SQLException ex) {
-           throw (new ContratoInvalidoException(ex.getMessage()));          
-        }
+        c.setSituacaoAtual(SituacaoContrato.CANCELADO);
+        c.setDataRescisao(new GregorianCalendar(2017, Calendar.FEBRUARY, 1));
+        c.salvar();
+        
+        int numLinhasExcluidas = Contrato.excluir(c.getId());
+        assertEquals(1, numLinhasExcluidas);
     }
-    
-    
-    @Test(expected = ContratoInvalidoException.class)
-    public void testAluno() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
 
-        dateStr = "01/03/2017";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
-
-        Contrato a = new Contrato();
-        //a.setAluno(Aluno.buscarPorId(3));
-        a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
+    @Test
+    public void testAlunoNaoInformado() throws SQLException, ContratoInvalidoException {
+        Contrato c = new Contrato();
+        //a.setAluno(Aluno.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setTipo(TipoContrato.OBRIGATORIO);
+        c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
+        c.setNumProtocolo("123456");
+        c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataTermino(new GregorianCalendar(2018, Calendar.JANUARY, 1));
+        c.setValorBolsa(BigDecimal.valueOf(300.0));
+        c.setAuxilioTransporte(BigDecimal.valueOf(80.0));
+        c.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
+        c.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
+        c.setObservacao("Teste");
+        c.setIndAlunoContratado("N");
 
         try {
-            a.salvar(true);
-
-        } catch (ContratoInvalidoException | SQLException ex) {
-            throw (new ContratoInvalidoException(ex.getMessage()));
+            c.salvar();
+        } catch (ContratoInvalidoException e) {
+            assertEquals("Aluno do contrato não informado", e.getMessage());
         }
     }
 
-    @Test(expected = ContratoInvalidoException.class)
-    public void testEmpresa() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
-
-        dateStr = "01/03/2017";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
-
-        Contrato a = new Contrato();
-        a.setAluno(Aluno.buscarPorId(3));
+    @Test
+    public void testEmpresaNaoInformada() throws SQLException, ContratoInvalidoException {
+        Contrato c = new Contrato();
+        c.setAluno(Aluno.buscarPorId(1));
         //a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
-        a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
+        c.setTipo(TipoContrato.OBRIGATORIO);
+        c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
+        c.setNumProtocolo("123456");
+        c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataTermino(new GregorianCalendar(2018, Calendar.JANUARY, 1));
+        c.setValorBolsa(BigDecimal.valueOf(300.0));
+        c.setAuxilioTransporte(BigDecimal.valueOf(80.0));
+        c.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
+        c.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
+        c.setObservacao("Teste");
+        c.setIndAlunoContratado("N");
 
         try {
-            a.salvar(true);
-
-        } catch (ContratoInvalidoException | SQLException ex) {
-            throw new ContratoInvalidoException(ex.getMessage());
+            c.salvar();
+        } catch (ContratoInvalidoException e) {
+            assertEquals("Empresa do contrato não informada", e.getMessage());
         }
     }
 
-    @Test(expected = ContratoInvalidoException.class)
-    public void testSituacao() throws SQLException, ContratoInvalidoException {
-        String dateStr = "01/01/2017";
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
-        Date dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataInicio = Calendar.getInstance();
-        dataInicio.setTime(dateObj);
-
-        dateStr = "01/03/2017";
-        dateObj = null;
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataTermino = Calendar.getInstance();
-        dataTermino.setTime(dateObj);
-
-        Contrato a = new Contrato();
-        a.setAluno(Aluno.buscarPorId(3));
-        a.setEmpresa(Empresa.buscarPorId(1));
-        a.setTipo(TipoContrato.OBRIGATORIO);
+    @Test
+    public void testSituacaoNaoInformada() throws SQLException, ContratoInvalidoException {
+        Contrato c = new Contrato();
+        c.setAluno(Aluno.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setTipo(TipoContrato.OBRIGATORIO);
         //a.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        a.setNumProtocolo("123456");
-        a.setDataEntrada(dataInicio);
-        a.setDataInicio(dataInicio);
-        a.setDataTermino(dataTermino);
-        a.setValorBolsa(BigDecimal.valueOf(300.0));
-        a.setAuxilioTransporte(BigDecimal.valueOf(80.0));
-        a.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
-        a.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
-        a.setObservacao("Teste");
-        a.setIndAlunoContratado("N");
+        c.setNumProtocolo("123456");
+        c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataTermino(new GregorianCalendar(2018, Calendar.JANUARY, 1));
+        c.setValorBolsa(BigDecimal.valueOf(300.0));
+        c.setAuxilioTransporte(BigDecimal.valueOf(80.0));
+        c.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
+        c.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
+        c.setObservacao("Teste");
+        c.setIndAlunoContratado("N");
 
         try {
-            a.salvar(true);
+            c.salvar();
+        } catch (ContratoInvalidoException e) {
+            assertEquals("Situação do contrato não informada", e.getMessage());
+        }
+    }
 
-        } catch (ContratoInvalidoException | SQLException ex) {
-            throw new ContratoInvalidoException(ex.getMessage());
+    @Test
+    public void testTipoNaoInformado() throws SQLException, ContratoInvalidoException {
+        Contrato c = new Contrato();
+        c.setAluno(Aluno.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        //c.setTipo(TipoContrato.OBRIGATORIO);
+        c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
+        c.setNumProtocolo("123456");
+        c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
+        c.setDataTermino(new GregorianCalendar(2018, Calendar.JANUARY, 1));
+        c.setValorBolsa(BigDecimal.valueOf(300.0));
+        c.setAuxilioTransporte(BigDecimal.valueOf(80.0));
+        c.setValorCargaHorariaDiaria(BigDecimal.valueOf(6.0));
+        c.setValorCargaHorariaSemanal(BigDecimal.valueOf(30.0));
+        c.setObservacao("Teste");
+        c.setIndAlunoContratado("N");
+
+        try {
+            c.salvar();
+        } catch (ContratoInvalidoException e) {
+            assertEquals("Tipo do contrato não informado", e.getMessage());
         }
     }
     
     @Test
     public void testBuscarPorId() throws Exception {
-        
-        Contrato u = new Contrato().buscarPorId(1);       
-        System.out.println(u.toString());
-               
+        Contrato c = Contrato.buscarPorId(1);
+        validarContratoPadrao(c);
     }
-    
+
     @Test
-    public void testBuscarIdAluno() throws SQLException {
-        List<Contrato> u = new Contrato().buscarPorIdAluno(3);
-        for(Object i : u)
-            System.out.println(i);
+    public void testBuscarPorIdAluno() throws SQLException {
+        List<Contrato> c = Contrato.buscarPorIdAluno(1);
+
+        assertEquals((int) 1, c.size());
+        validarContratoPadrao(c.get(0));
     }
-    
+
     @Test
     public void testBuscarTodos() throws SQLException {
-        List<Contrato> u = new Contrato().buscarTodos();
-        for(Object i : u)
-            System.out.println(i);
+        List<Contrato> c = new Contrato().buscarTodos();
+
+        assertEquals((int) 1, c.size());
+        validarContratoPadrao(c.get(0));
+    }
+
+    @Test
+    public void testAnexarDocumento() throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException {
+        Contrato c = Contrato.buscarPorId(1);
+
+        String arquivoTeste = criarArquivoTesteCasoNaoExista();
+        Integer idAnexo = c.anexarDocumento(arquivoTeste);
+        assertNotNull(idAnexo);        
+    }
+
+    @Test
+    public void testBuscarDocumentos() throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException {
+        Contrato c = Contrato.buscarPorId(1);
+
+        String arquivoTeste = criarArquivoTesteCasoNaoExista();
+        Integer idAnexo = c.anexarDocumento(arquivoTeste);
+
+        List<Documento> docs = Contrato.buscarDocumentos(c.getId());
+        List<Documento> retorno = docs.stream()
+                .filter(x -> x.getId().equals(idAnexo))
+                .collect(Collectors.toList());
+        
+        assertTrue(retorno.size() > 0);              
     }
     
     @Test
-    public void testAnexarDocumento()throws SQLException, ContratoInvalidoException, FileNotFoundException {
-        Contrato c = new Contrato().buscarPorId(31);
+    public void testBaixarDocumento() throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException {
+        Contrato c = Contrato.buscarPorId(1);
+
+        String arquivoTeste = criarArquivoTesteCasoNaoExista();
+        Integer idAnexo = c.anexarDocumento(arquivoTeste);
+
+        String arquivo = temp.getRoot().getAbsolutePath() + "/teste.txt";
         
-        try {
-            c.anexarDocumento("C:\teste.txt");
-        } catch (SQLException ex) {
-            throw new ContratoInvalidoException(ex.getMessage());
-        }
+        File f = new File(arquivo);
+        assertFalse(f.exists());
         
+        Contrato.baixarDocumento(idAnexo, arquivo);
+
+        assertTrue(f.exists());
+        assertTrue(f.isFile());
     }
-    
-    @Test
-    public void testBaixarDocumento()throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException {
+
+    public static void validarContratoPadrao(Contrato c) {
+        assertEquals(1, (int) c.getId());
+
+        AlunoTest.validarAlunoPadrao(c.getAluno());
+        EmpresaTest.validarEmpresaNewtonPaiva(c.getEmpresa());
+
+        assertEquals(TipoContrato.OBRIGATORIO, c.getTipo());
+        assertEquals(SituacaoContrato.ANDAMENTO, c.getSituacaoAtual());
+        assertEquals("123456", c.getNumProtocolo());
+        assertEquals((new GregorianCalendar(2016, Calendar.OCTOBER, 1)).getTime(),
+                c.getDataEntrada().getTime());
+        assertEquals((new GregorianCalendar(2016, Calendar.OCTOBER, 05)).getTime(),
+                c.getDataInicio().getTime());
+        assertNull(c.getDataRescisao());
+        assertNull(c.getDataTermino());
+        assertEquals(new BigDecimal("4.0"), c.getValorCargaHorariaDiaria());
+        assertEquals(new BigDecimal("40.0"), c.getValorCargaHorariaSemanal());
+        assertEquals("Teste", c.getObservacao());
+    }
+
+    private String criarArquivoTesteCasoNaoExista() throws IOException {
+        File arqTeste = temp.newFile();
                 
-        try {
-            Contrato.baixarDocumento(31, "C:\teste.txt");
-        } catch (SQLException ex) {
-            throw new ContratoInvalidoException(ex.getMessage());
+        try (FileWriter w = new FileWriter(arqTeste);) {
+            for (int i = 0; i < 10; i++) {
+                w.write("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+                w.write(" Suspendisse eleifend risus tortor, at iaculis est");
+                w.write(" ultricies eu. Proin tellus diam, ornare sed tellus");
+                w.write(" sit amet, scelerisque elementum eros. Nunc mattis arcu");
+                w.write(" ut ultricies viverra. Donec dapibus est id luctus");
+                w.write(" interdum. Nulla ornare risus sed sollicitudin suscipit.");
+                w.write(" Aenean ac volutpat tellus. Sed posuere sem eget metus");
+                w.write(" eleifend, nec fringilla ligula vestibulum. Phasellus");
+                w.write(" molestie pretium massa. In hac habitasse platea");
+                w.write(" dictumst. Quisque tempor magna diam, eget commodo nisl");
+                w.write(" fermentum sed. Morbi in venenatis nibh. Sed placerat");
+                w.write(" egestas enim eget facilisis. Nullam diam libero,");
+                w.write(" faucibus a est vitae, vestibulum finibus ante. Donec");
+                w.write(" et magna ac odio blandit maximus.\n");
+            }
+
+            return arqTeste.getAbsolutePath();
         }
-        
     }
-        
-        
-
-    
-
 }

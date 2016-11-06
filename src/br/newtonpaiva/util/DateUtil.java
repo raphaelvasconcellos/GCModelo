@@ -6,6 +6,7 @@
 package br.newtonpaiva.util;
 
 import java.sql.Date;
+import java.sql.Types;
 import java.util.Calendar;
 
 /**
@@ -14,11 +15,17 @@ import java.util.Calendar;
  */
 public class DateUtil {
     public static java.sql.Date converter(Calendar data) {
+        if(data == null)
+            return null;
+        
         long timeInMillis = data.getTimeInMillis();
         return new java.sql.Date(timeInMillis);
     }
     
     public static Calendar converter(java.sql.Date data) {
+        if(data == null)
+            return null;
+        
         long timeInMillis = data.getTime();
         Calendar retorno = Calendar.getInstance();
         retorno.setTimeInMillis(timeInMillis);
@@ -26,7 +33,6 @@ public class DateUtil {
     }
     
     public static Integer getDifferenceDays(Date d1, Date d2) {
-        
         if(d1 == null || d2 == null)
             return null;
         

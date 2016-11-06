@@ -11,9 +11,9 @@ import br.newtonpaiva.modelo.excecoes.SenhaException;
 import br.newtonpaiva.modelo.excecoes.UsuarioInvalidoException;
 import java.sql.SQLException;
 import java.util.List;
-import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
 /**
  *
  * @author Tarley Lana
@@ -27,8 +27,7 @@ public class UsuarioTest {
     @Test
     public void testValidar() throws SQLException {
         Boolean valor = Usuario.validar("admin", "123");
-        Assert.assertTrue(valor);
-        
+        assertTrue(valor);        
     }
     
     /**
@@ -38,7 +37,7 @@ public class UsuarioTest {
     @Test(expected = LoginException.class)
     public void testLoginException() throws SQLException{
         Usuario.validar("", "admin");
-        Assert.fail();
+        fail();
     }
     /**
      * 
@@ -48,7 +47,7 @@ public class UsuarioTest {
     @Test(expected = SenhaException.class)
     public void testSenhaException() throws SQLException{
         Usuario.validar("admin", "123456");
-        Assert.fail();
+        fail();
     }
     
     /**
@@ -64,14 +63,14 @@ public class UsuarioTest {
         u.setEmail("teste@newtonpaiva.br");
         try {            
             u.salvar();
-            Assert.assertNotNull(u.getId());
+            assertNotNull(u.getId());
             u.setNome("Novo teste");
             u.salvar();
             int numLinhasExcluidas = Usuario.excluir(u.getId());
-            Assert.assertEquals(1, numLinhasExcluidas);
+            assertEquals(1, numLinhasExcluidas);
             
         } catch (UsuarioInvalidoException | SQLException ex) {
-            Assert.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
     
@@ -81,8 +80,8 @@ public class UsuarioTest {
      */
     @Test
     public void testBuscarPorId() throws Exception {
-        Usuario u = Usuario.buscarPorId(1);        
-        Assert.assertEquals("admin", u.getLogin());               
+        Usuario u = Usuario.buscarPorId(1);
+        validarUsuarioAdmin(u);        
     }
 
     /**
@@ -92,7 +91,7 @@ public class UsuarioTest {
     @Test
     public void testBuscarTodos() throws SQLException {
         List<Usuario> a = new Usuario().buscarTodos();
-        Assert.assertEquals("admin", a.get(0).getLogin());
+        validarUsuarioAdmin(a.get(0));        
     }
     
     @Test(expected = UsuarioInvalidoException.class)
@@ -129,5 +128,15 @@ public class UsuarioTest {
         u.setSenha("123456");
         u.setLogin("teste");
         u.salvar();     
+    }
+    
+    public static void validarUsuarioAdmin(Usuario u) {
+        assertEquals(1, (int) u.getId());
+        assertEquals("Administrador", u.getNome());
+        assertEquals("admin", u.getLogin());
+        assertEquals("admin@newtonpaiva.br", u.getEmail());
+        
+        if(u.getSenha() != null)
+            assertEquals("123", u.getSenha());
     }
 }

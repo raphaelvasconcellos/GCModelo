@@ -31,7 +31,17 @@ public class Usuario {
     private String login;
     private String senha;
     private String email;
-    private List<Usuario> usuario;
+
+    public Usuario() {
+        
+    }
+    
+    public Usuario(ResultSet r) throws SQLException {
+        id = r.getInt(1);
+        nome = r.getString(2);
+        login = r.getString(3);
+        email = r.getString(4);
+    }
 
     /**
      * @return the id
@@ -147,10 +157,7 @@ public class Usuario {
             return false;
         }
         final Usuario other = (Usuario) obj;
-        if (!Objects.equals(this.login, other.login)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.login, other.login);
     }
 
     public void salvar() throws UsuarioInvalidoException, SQLException {

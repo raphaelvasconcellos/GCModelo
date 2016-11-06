@@ -97,26 +97,57 @@ public class AlunoTest {
     @Test
     public void testBuscarPorId() throws Exception {
         Aluno a = Aluno.buscarPorId(1);        
-        validarAlunoTeste(a);
+        validarAlunoPadrao(a);
     }
     
     @Test
     public void testBuscarPorRA() throws Exception {
         Aluno a = Aluno.buscarPorRA("11223344");        
-        validarAlunoTeste(a);
+        validarAlunoPadrao(a);
     }
     
     @Test
     public void testBuscarPorCPF() throws Exception {
         Aluno a = Aluno.buscarPorCPF("11111111111");        
-        validarAlunoTeste(a);
+        validarAlunoPadrao(a);
         
         a = Aluno.buscarPorCPF("111.111.111-11");        
-        validarAlunoTeste(a);
-    }
+        validarAlunoPadrao(a);
+    }    
 
-    private void validarAlunoTeste(Aluno a) {
-        assertEquals((int) 1, (int) a.getId());
+    /**
+     * Test of buscarTodos method, of class Aluno.
+    */ 
+    @Test
+    public void testBuscarTodos() throws SQLException {
+        List<Aluno> a = Aluno.buscarTodos();
+        
+        assertEquals((int) 2, a.size());
+        validarAlunoPadrao(a.get(0));
+        validarAlunoDeficiente(a.get(1));
+    }
+    
+    @Test
+    public void testBuscarPorNome() throws SQLException {
+        List<Aluno> a = Aluno.buscarPorNome("Aluno");
+        
+        assertEquals((int) 2, a.size());
+        validarAlunoPadrao(a.get(0));
+        validarAlunoDeficiente(a.get(1));
+        
+        a = Aluno.buscarPorNome("Teste");
+        
+        assertEquals((int) 1, a.size());
+        validarAlunoPadrao(a.get(0));
+        
+        a = Aluno.buscarPorNome("uno Tes");
+        
+        assertEquals((int) 1, a.size());
+        validarAlunoPadrao(a.get(0));
+    }
+    
+    public static void validarAlunoPadrao(Aluno a) {
+        assertEquals(1, (int) a.getId());
         assertEquals(Curso.SISTEMA_INFORMACAO, a.getCurso());
         assertEquals("11223344" , a.getRa());
         assertEquals("Aluno Teste", a.getNome());
@@ -126,32 +157,14 @@ public class AlunoTest {
         assertEquals("N", a.getDeficiente());              
     }
 
-    /**
-     * Test of buscarTodos method, of class Aluno.
-    */ 
-    @Test
-    public void testBuscarTodos() throws SQLException {
-        List<Aluno> a = Aluno.buscarTodos();
-        
-        assertEquals((int) 1, a.size());
-        validarAlunoTeste(a.get(0));
-    }
-    
-    @Test
-    public void testBuscarPorNome() throws SQLException {
-        List<Aluno> a = Aluno.buscarPorNome("Aluno");
-        
-        assertEquals((int) 1, a.size());
-        validarAlunoTeste(a.get(0));
-        
-        a = Aluno.buscarPorNome("Teste");
-        
-        assertEquals((int) 1, a.size());
-        validarAlunoTeste(a.get(0));
-        
-        a = Aluno.buscarPorNome("uno Tes");
-        
-        assertEquals((int) 1, a.size());
-        validarAlunoTeste(a.get(0));
+    private void validarAlunoDeficiente(Aluno a) {
+        assertEquals(2, (int) a.getId());
+        assertEquals(Curso.ENFERMAGEM, a.getCurso());
+        assertEquals("22334455" , a.getRa());
+        assertEquals("Aluno Deficiente", a.getNome());
+        assertEquals("22222222222", a.getCpf());
+        assertEquals("222.222.222-22", a.getCpfFormatado());
+        assertEquals("aluno.def@newtonpaiva.br" , a.getEmail());
+        assertEquals("S", a.getDeficiente());   
     }
 }

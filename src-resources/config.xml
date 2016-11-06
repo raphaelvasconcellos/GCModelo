@@ -10,6 +10,7 @@ and open the template in the editor.
     <entry key="db.usuario">root</entry>
     <entry key="db.senha"></entry>
     
+    <!-- USUARIO -->
     <entry key="usuario.insert">
         insert into usuario(
             nom_usuario, 
@@ -46,7 +47,7 @@ and open the template in the editor.
            from usuario;
     </entry>                                 
                                     
-                                    
+    <!-- ALUNO -->              
     <entry key="aluno.insert"> 
         insert into aluno(        
             cod_curso,
@@ -56,8 +57,7 @@ and open the template in the editor.
             num_cpf_aluno,
             ind_deficiente
         ) values( ?, ?, ?, ?, ?, ?)
-    </entry>
-                                    
+    </entry>                                    
     <entry key="aluno.update">
         update aluno
            set cod_curso = ?,
@@ -124,7 +124,8 @@ and open the template in the editor.
            FROM aluno
           WHERE NUM_CPF_ALUNO = ?
     </entry>                       
-                                                    
+    
+    <!-- EMPRESA -->                                                                       
     <entry key="empresa.insert">
         insert into empresa
         (
@@ -157,10 +158,8 @@ and open the template in the editor.
         nom_contato=?,
         des_observacao=?
         where cod_empresa = ?
-    </entry>
-    
+    </entry>    
     <entry key="empresa.delete">delete from empresa where cod_empresa = ? </entry>    
-    
     <entry key="empresa.select">
         select  cod_empresa,
                 nom_empresa,
@@ -175,8 +174,7 @@ and open the template in the editor.
                 nom_contato,
                 des_observacao
           from  empresa
-    </entry>   
-     
+    </entry>
     <entry key="empresa.select.id">
         select  cod_empresa,
                 nom_empresa,
@@ -193,7 +191,6 @@ and open the template in the editor.
            from empresa
           where cod_empresa = ?;
     </entry>
-    
     <entry key="empresa.select.cnpj">
         select  cod_empresa,
                 nom_empresa,
@@ -227,6 +224,7 @@ and open the template in the editor.
           where nom_empresa like ?;
     </entry>
     
+    <!-- CONVENIO -->
     <entry key="convenio.insert">
         insert into convenio
         (
@@ -283,155 +281,152 @@ and open the template in the editor.
     </entry>
     
     
-                                                                        
-    <entry key="contrato.selectall">select 
-        cod_contrato,
-        cod_aluno,
-        cod_empresa,
-        cod_contrato_tipo,
-        cod_contrato_situacao_atual,
-        num_protocolo,
-        dat_entrada,
-        dat_inicio_atual,
-        dat_termino_atual,
-        dat_rescisao,
-        val_bolsa,
-        val_auxilio_transporte,
-        qtd_carga_horaria_diaria,
-        qtd_carga_horaria_semanal,
-        des_observacao,
-        ind_aluno_contratado
-        from contrato;</entry>
-    
-    <entry key="contrato.insert">insert into contrato(cod_aluno,
-        cod_empresa,
-        cod_contrato_tipo,
-        cod_contrato_situacao_atual,
-        num_protocolo,
-        dat_entrada,
-        dat_inicio_atual,
-        dat_termino_atual,
-        dat_rescisao,
-        val_bolsa,
-        val_auxilio_transporte,
-        qtd_carga_horaria_diaria,
-        qtd_carga_horaria_semanal,
-        des_observacao,
-        ind_aluno_contratado)values(
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?,
-        ?);</entry>
-    <entry key="contrato.update">update contrato set 
-        cod_aluno = ?,
-        cod_empresa = ?,
-        cod_contrato_tipo = ?,
-        cod_contrato_situacao_atual = ?,
-        num_protocolo = ?,
-        dat_entrada = ?,
-        dat_inicio_atual = ?,
-        dat_termino_atual = ?,
-        dat_rescisao = ?,
-        val_bolsa = ?,
-        val_auxilio_transporte = ?,
-        qtd_carga_horaria_diaria = ?,
-        qtd_carga_horaria_semanal = ?,
-        des_observacao = ?,
-        ind_aluno_contratado = ?
-        where cod_contrato = ?;</entry>
-                                        
-    <entry key="contrato.delete">delete from contrato where cod_contrato = ?;</entry>
-    <entry key="contrato.select">select cod_contrato,
-        cod_aluno,
-        cod_empresa,
-        cod_contrato_tipo,
-        cod_contrato_situacao_atual,
-        num_protocolo,
-        dat_entrada,
-        dat_inicio_atual,
-        dat_termino_atual,
-        dat_rescisao,
-        val_bolsa,
-        val_auxilio_transporte,
-        qtd_carga_horaria_diaria,
-        qtd_carga_horaria_semanal,
-        des_observacao,
-        ind_aluno_contratado 
-        from contrato 
-        where cod_contrato = ?;</entry>  
-    <entry key="contrato.selectidaluno">select cod_contrato,
-        cod_aluno,
-        cod_empresa,
-        cod_contrato_tipo,
-        cod_contrato_situacao_atual,
-        num_protocolo,
-        dat_entrada,
-        dat_inicio_atual,
-        dat_termino_atual,
-        dat_rescisao,
-        val_bolsa,
-        val_auxilio_transporte,
-        qtd_carga_horaria_diaria,
-        qtd_carga_horaria_semanal,
-        des_observacao,
-        ind_aluno_contratado 
-        from contrato 
-        where cod_aluno = ?;</entry>  
-    
-    <entry key="contrato.buscaTotalHorasDiarias">select 
-        coalesce(sum(QTD_CARGA_HORARIA_DIARIA),0.00) as total_diario 
-        from contrato 
-        where cod_contrato_situacao_atual = 1 and cod_aluno = ?;
-    </entry>     
-    <entry key="contrato.buscaTotalHorasDiariasEdicao">select 
-        coalesce(sum(QTD_CARGA_HORARIA_DIARIA),0.00) as total_diario 
-        from contrato 
-        where cod_contrato_situacao_atual = 1 and cod_aluno = ? and cod_contrato not in(?);
-    </entry> 
-    <entry key="contrato.buscaTotalHorasSemanais">select 
-        coalesce(sum(QTD_CARGA_HORARIA_SEMANAL),0.00) as total_semanal 
-        from contrato 
-        where cod_contrato_situacao_atual = 1 and cod_aluno = ?;
-    </entry> 
-    <entry key="contrato.buscaTotalHorasSemanaisEdicao">select 
-        coalesce(sum(QTD_CARGA_HORARIA_SEMANAL),0.00) as total_semanal 
-        from contrato 
-        where cod_contrato_situacao_atual = 1 and cod_aluno = ? and cod_contrato not in (?);
-    </entry> 
-    <entry key="contrato.buscaTempoContratoAlunoEmpresa">select 
-        coalesce(sum(DATEDIFF(dat_termino_atual, dat_inicio_atual)+1)) as total_dias 
-        from contrato 
-        where cod_aluno =? and cod_empresa = ?;
+    <!-- CONTRATO -->
+    <entry key="contrato.insert">
+        insert into contrato(
+            cod_aluno,
+            cod_empresa,
+            cod_contrato_tipo,
+            cod_contrato_situacao_atual,
+            num_protocolo,
+            dat_entrada,
+            dat_inicio_atual,
+            dat_termino_atual,
+            dat_rescisao,
+            val_bolsa,
+            val_auxilio_transporte,
+            qtd_carga_horaria_diaria,
+            qtd_carga_horaria_semanal,
+            des_observacao,
+            ind_aluno_contratado)
+        values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     </entry>
-    <entry key="contrato.buscaTempoContratoAlunoEmpresaEdicao">select  
-        coalesce(sum(DATEDIFF(dat_termino_atual, dat_inicio_atual)+1)) as total_dias 
-        from contrato 
-        where cod_aluno =? and cod_empresa = ? and cod_contrato not in (?);
+    <entry key="contrato.update">
+        update  contrato 
+           set  cod_aluno = ?,
+                cod_empresa = ?,
+                cod_contrato_tipo = ?,
+                cod_contrato_situacao_atual = ?,
+                num_protocolo = ?,
+                dat_entrada = ?,
+                dat_inicio_atual = ?,
+                dat_termino_atual = ?,
+                dat_rescisao = ?,
+                val_bolsa = ?,
+                val_auxilio_transporte = ?,
+                qtd_carga_horaria_diaria = ?,
+                qtd_carga_horaria_semanal = ?,
+                des_observacao = ?,
+                ind_aluno_contratado = ?
+          where cod_contrato = ?;
+    </entry>                                        
+    <entry key="contrato.delete">delete from contrato where cod_contrato = ?;</entry>
+    <entry key="contrato.select">
+        select  cod_contrato,
+                cod_aluno,
+                cod_empresa,
+                cod_contrato_tipo,
+                cod_contrato_situacao_atual,
+                num_protocolo,
+                dat_entrada,
+                dat_inicio_atual,
+                dat_termino_atual,
+                dat_rescisao,
+                val_bolsa,
+                val_auxilio_transporte,
+                qtd_carga_horaria_diaria,
+                qtd_carga_horaria_semanal,
+                des_observacao,
+                ind_aluno_contratado
+           from contrato;
+    </entry>
+    <entry key="contrato.select.id">
+        select  cod_contrato,
+                cod_aluno,
+                cod_empresa,
+                cod_contrato_tipo,
+                cod_contrato_situacao_atual,
+                num_protocolo,
+                dat_entrada,
+                dat_inicio_atual,
+                dat_termino_atual,
+                dat_rescisao,
+                val_bolsa,
+                val_auxilio_transporte,
+                qtd_carga_horaria_diaria,
+                qtd_carga_horaria_semanal,
+                des_observacao,
+                ind_aluno_contratado 
+           from contrato 
+          where cod_contrato = ?;
+    </entry>  
+    <entry key="contrato.select.aluno">
+        select  cod_contrato,
+                cod_aluno,
+                cod_empresa,
+                cod_contrato_tipo,
+                cod_contrato_situacao_atual,
+                num_protocolo,
+                dat_entrada,
+                dat_inicio_atual,
+                dat_termino_atual,
+                dat_rescisao,
+                val_bolsa,
+                val_auxilio_transporte,
+                qtd_carga_horaria_diaria,
+                qtd_carga_horaria_semanal,
+                des_observacao,
+                ind_aluno_contratado 
+           from contrato 
+          where cod_aluno = ?;
+    </entry>    
+    <entry key="contrato.select.horas.diarias">
+        select coalesce(sum(QTD_CARGA_HORARIA_DIARIA),0.00) as total_diario 
+          from contrato 
+         where cod_contrato_situacao_atual = 1 
+           and cod_aluno = ?
+           and cod_contrato != ?;
+    </entry>  
+    <entry key="contrato.select.horas.semanais">
+        select coalesce(sum(QTD_CARGA_HORARIA_SEMANAL),0.00) as total_semanal 
+          from contrato 
+         where cod_contrato_situacao_atual = 1 
+           and cod_aluno = ?
+           and cod_contrato != ?;
+    </entry>
+    <entry key="contrato.select.tempo.contrato.aluno.empresa">
+        select coalesce(sum(DATEDIFF(dat_termino_atual, dat_inicio_atual)+1)) as total_dias 
+          from contrato 
+         where cod_aluno =? 
+           and cod_empresa = ?
+           and cod_contrato != ? 
     </entry>
     <entry key="documento.digitalizado.insert">
         insert into documento_digitalizado(
-            cod_contrato, 
+            cod_contrato,
+            nome_documento,
             img_documento
-        ) values( ?, ?);
+        ) values( ?, ?, ?);
     </entry>
-    <entry key="contrato.selectdocumento">
-        select img_documento 
-          from documento_digitalizado 
-         where cod_contrato = ?;
+    <entry key="documento.digitalizado.select.contrato">
+        select  cod_documento_digitalizado,
+                nome_documento
+          from  documento_digitalizado 
+         where  cod_contrato = ?;
+    </entry>
+    <entry key="documento.digitalizado.select.id">
+        select  nome_documento,
+                img_documento 
+          from  documento_digitalizado 
+         where  cod_documento_digitalizado = ?;
     </entry>
     
     
+    
+    
+    
+    
+    <!-- CONTRATO HISTORICO -->
     <entry key="contratohistorico.insert"> insert into contrato_situacao_historico(        
         cod_contrato,
         cod_contrato_situacao,

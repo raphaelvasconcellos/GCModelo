@@ -161,7 +161,7 @@ public class EmpresaTest {
         validarEmpresaNewtonPaiva(e.get(0));
     }
     
-    private void validarEmpresaNewtonPaiva(Empresa e) {
+    public static void validarEmpresaNewtonPaiva(Empresa e) {
         assertEquals(1L, (long) e.getId());
         assertEquals("Newton Paiva", e.getNome());
         assertEquals("16521155000103", e.getCnpj());
