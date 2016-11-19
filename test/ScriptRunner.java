@@ -20,11 +20,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+import static br.newtonpaiva.util.ConfigurationManager.DB_SENHA;
+import static br.newtonpaiva.util.ConfigurationManager.DB_URL;
+import static br.newtonpaiva.util.ConfigurationManager.DB_USUARIO;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.sql.*;
+import javax.swing.JOptionPane;
 
 /**
  * Tool to run database scripts
@@ -84,10 +89,10 @@ public class ScriptRunner {
         try {
             boolean originalAutoCommit = connection.getAutoCommit();
 //            try {
-                if (originalAutoCommit != this.autoCommit) {
-                    connection.setAutoCommit(this.autoCommit);
-                }
-                runScript(connection, reader);
+            if (originalAutoCommit != this.autoCommit) {
+                connection.setAutoCommit(this.autoCommit);
+            }
+            runScript(connection, reader);
 //            } 
 //            finally {
 //                connection.setAutoCommit(originalAutoCommit);
@@ -235,6 +240,22 @@ public class ScriptRunner {
         }
         if (errorLogWriter != null) {
             errorLogWriter.flush();
+        }
+    }
+
+    public static void main(String args[]) throws SQLException, IOException {
+        Reader scriptCreate = new InputStreamReader(
+                TestSuite.class.getResourceAsStream("/db_create.sql"));
+
+        Reader scriptInsert = new InputStreamReader(
+                TestSuite.class.getResourceAsStream("/db_insert.sql"));
+
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);) {
+            ScriptRunner script = new ScriptRunner(c, true, true);
+            script.runScript(scriptCreate);
+            script.runScript(scriptInsert);
+            
+            JOptionPane.showMessageDialog(null, "Banco atualizado com sucesso!");
         }
     }
 }

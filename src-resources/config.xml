@@ -292,59 +292,75 @@ and open the template in the editor.
     
     <!-- CONVENIO -->
     <entry key="convenio.insert">
-        insert into convenio
-        (
-        cod_empresa,
-        cod_curso, 
-        cod_convenio_situacao,
-        dat_vencimento,
-        dat_assinatura)
-        values(?, ?, ?, ?, ?);
-    </entry>    
-    
-    <entry key="convenio.delete">delete from convenio where cod_convenio = ? </entry>    
-    
-    <entry key="convenio.selectall">select 
-        cod_convenio, 
-        cod_empresa,
-        cod_curso, 
-        cod_convenio_situacao,
-        dat_vencimento,
-        dat_assinatura
-        from convenio
-    </entry>   
-     
-    <entry key="convenio.select">
-        select  cod_convenio,
-        cod_empresa,
-        cod_curso, 
-        cod_convenio_situacao,
-        dat_vencimento,
-        dat_assinatura
-        from convenio
-        where cod_convenio = ?;
-    </entry>
-    
-    <entry key="convenio.selectidempresa">
-        select  cod_convenio,
-        cod_empresa,
-        cod_curso, 
-        cod_convenio_situacao,
-        dat_vencimento,
-        dat_assinatura
-        from convenio
-        where cod_empresa = ?;
+        insert into convenio(
+            cod_empresa,
+            cod_curso, 
+            cod_convenio_situacao,
+            dat_vencimento,
+            dat_assinatura
+        ) values(?, ?, ?, ?, ?);
     </entry>
     
     <entry key="convenio.update">
         update  convenio
-        set  cod_empresa=?,
-        cod_curso=?, 
-        cod_convenio_situacao=?,
-        dat_vencimento=?,
-        dat_assinatura=?
-        where cod_convenio = ?
+           set  cod_empresa = ?,
+                cod_curso = ?, 
+                cod_convenio_situacao = ?,
+                dat_vencimento = ?,
+                dat_assinatura = ?
+          where cod_convenio = ?
     </entry>
+    
+    <entry key="convenio.delete">delete from convenio where cod_convenio = ? </entry>    
+    
+    <entry key="convenio.select">
+        select  cod_convenio, 
+                cod_empresa,
+                cod_curso, 
+                cod_convenio_situacao,
+                dat_vencimento,
+                dat_assinatura
+           from convenio
+    </entry>   
+     
+    <entry key="convenio.select.id">
+        select  cod_convenio,
+                cod_empresa,
+                cod_curso, 
+                cod_convenio_situacao,
+                dat_vencimento,
+                dat_assinatura
+           from convenio
+          where cod_convenio = ?;
+    </entry>
+    
+    <entry key="convenio.select.empresa">
+        select  cod_convenio,
+                cod_empresa,
+                cod_curso, 
+                cod_convenio_situacao,
+                dat_vencimento,
+                dat_assinatura
+           from convenio
+          where cod_empresa = ?;
+    </entry>
+    
+    <entry key="convenio.select.por.filtro">
+        SELECT  c.cod_convenio, 
+                c.cod_empresa,
+                c.cod_curso, 
+                c.cod_convenio_situacao,
+                c.dat_vencimento,
+                c.dat_assinatura
+           FROM convenio c
+        INNER JOIN empresa e ON e.cod_empresa = c.cod_empresa 
+        INNER JOIN curso cur ON cur.cod_curso = c.cod_curso
+        WHERE (? IS NULL OR c.dat_vencimento = ?)
+          AND (? IS NULL OR c.dat_assinatura = ?)
+          AND (? IS NULL OR c.cod_convenio_situacao = ?)
+          AND (? IS NULL OR e.num_cnpj = ?)
+          AND (? IS NULL OR cur.nom_curso LIKE ?)
+    </entry>   
     
     
     <!-- CONTRATO -->

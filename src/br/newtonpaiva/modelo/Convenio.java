@@ -5,17 +5,23 @@
  */
 package br.newtonpaiva.modelo;
 
-import br.newtonpaiva.modelo.excessoes.ConvenioInvalidoException;
-import java.util.Calendar;
-import java.util.Objects;
 import static br.newtonpaiva.util.ConfigurationManager.*;
 import static br.newtonpaiva.util.DateUtil.*;
+import static br.newtonpaiva.util.StringUtil.*;
+
+import br.newtonpaiva.modelo.excessoes.ConvenioInvalidoException;
+import br.newtonpaiva.util.CpfCnpjUtil;
+import br.newtonpaiva.util.StringUtil;
+import java.util.Calendar;
+import java.util.Objects;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +33,23 @@ public class Convenio {
 
     private Integer id;
     private Empresa empresa;
-    private CursoEnum curso;
+    private Curso curso;
     private SituacaoConvenio situacao;
     private Calendar dataVencimento;
     private Calendar dataAssinatura;
+
+    public Convenio() {
+
+    }
+
+    public Convenio(ResultSet r) throws SQLException {
+        id = r.getInt(1);
+        empresa = Empresa.buscarPorId(r.getInt(2));
+        curso = Curso.buscarPorId(r.getInt(3));
+        situacao = SituacaoConvenio.values()[r.getInt(4)];
+        dataVencimento = converter(r.getDate(5));
+        dataAssinatura = converter(r.getDate(6));
+    }
 
     @Override
     public int hashCode() {
@@ -97,14 +116,14 @@ public class Convenio {
     /**
      * @return the curso
      */
-    public CursoEnum getCurso() {
+    public Curso getCurso() {
         return curso;
     }
 
     /**
      * @param curso the curso to set
      */
-    public void setCurso(CursoEnum curso) {
+    public void setCurso(Curso curso) {
         this.curso = curso;
     }
 
@@ -151,26 +170,38 @@ public class Convenio {
     }
 
     public void salvar() throws ConvenioInvalidoException, SQLException {
-        /*
-            Salvar Convenio
-         */
+
+        if (getCurso() == null) {
+            throw new ConvenioInvalidoException("O curso deve ser informada.");
+        }
+
         if (getEmpresa() == null) {
-            throw new ConvenioInvalidoException("A Empresa deve ser informada.");
+            throw new ConvenioInvalidoException("A empresa deve ser informada.");
         }
 
         if (getSituacao() == null) {
-            throw new ConvenioInvalidoException("A Situação deve ser informada.");
+            throw new ConvenioInvalidoException("A situação deve ser informada.");
+        }
+        
+        if (getDataAssinatura() == null) {
+            throw new ConvenioInvalidoException("A data da assinatura de ser informada.");
+        }
+
+        if (getDataVencimento() == null) {
+            throw new ConvenioInvalidoException("A data de vencimento de ser informada.");
+        }
+
+        if (getDifferenceDays(getDataAssinatura(), getDataVencimento()) <= 0) {
+            throw new ConvenioInvalidoException("Data de vencimento menor que a data de assinatura.");
         }
 
         if (getId() == null) {
-            try (Connection con = DriverManager.getConnection(
-                    DB_URL, DB_USUARIO, DB_SENHA);
-                    PreparedStatement stm = con.prepareStatement(
-                            appSettings("convenio.insert"), Statement.RETURN_GENERATED_KEYS)) {
+            try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                    PreparedStatement stm = con.prepareStatement(appSettings("convenio.insert"), Statement.RETURN_GENERATED_KEYS)) {
 
                 stm.setInt(1, getEmpresa().getId());
-                stm.setInt(2, getCurso().ordinal()+1);
-                stm.setInt(3, getSituacao().ordinal()+1);
+                stm.setInt(2, getCurso().getId());
+                stm.setInt(3, getSituacao().ordinal());
                 stm.setDate(4, converter(getDataVencimento()));
                 stm.setDate(5, converter(getDataAssinatura()));
 
@@ -186,11 +217,10 @@ public class Convenio {
         } else {
             try (Connection con = DriverManager.getConnection(
                     DB_URL, DB_USUARIO, DB_SENHA);
-                    PreparedStatement stm = con.prepareStatement(
-                            appSettings("convenio.update"))) {
+                    PreparedStatement stm = con.prepareStatement(appSettings("convenio.update"))) {
                 stm.setInt(1, getEmpresa().getId());
-                stm.setInt(2, getCurso().ordinal()+1);
-                stm.setInt(3, getSituacao().ordinal()+1);
+                stm.setInt(2, getCurso().getId());
+                stm.setInt(3, getSituacao().ordinal());
                 stm.setDate(4, converter(getDataVencimento()));
                 stm.setDate(5, converter(getDataAssinatura()));
                 stm.setInt(6, getId());
@@ -198,46 +228,35 @@ public class Convenio {
             }
         }
     }
-        
-    
-    public static int excluir(Integer id) throws ConvenioInvalidoException, SQLException{       
-        
-        try(Connection con = DriverManager.getConnection(DB_URL,DB_USUARIO,DB_SENHA);               
-           PreparedStatement stm = con.prepareStatement(
-                   appSettings("convenio.delete"));){
-           stm.setInt(1, id);
-           return stm.executeUpdate();                                          
-        }           
+
+    public static int excluir(Integer id) throws ConvenioInvalidoException, SQLException {
+
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement stm = con.prepareStatement(
+                        appSettings("convenio.delete"));) {
+            stm.setInt(1, id);
+            return stm.executeUpdate();
+        }
     }
-    
-     public static Convenio buscarPorId(Integer id) throws SQLException, ConvenioInvalidoException {
+
+    public static Convenio buscarPorId(Integer id) throws SQLException, ConvenioInvalidoException {
         try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                PreparedStatement s = c.prepareStatement(
-                        appSettings("convenio.select.id"))) {
+                PreparedStatement s = c.prepareStatement(appSettings("convenio.select.id"))) {
 
             s.setInt(1, id);
 
-            try (ResultSet r = s.executeQuery()) {                       
+            try (ResultSet r = s.executeQuery()) {
 
                 if (r.next()) {
-                    Convenio u = new Convenio();
-                    u.setId(r.getInt(1));
-                    u.setEmpresa(Empresa.buscarPorId(r.getInt(2)));
-                    u.setCurso(CursoEnum.values()[r.getInt(3)-1]);
-                    u.setSituacao(SituacaoConvenio.values()[r.getInt(4)-1]);
-                    u.setDataVencimento(converter(r.getDate(5)));
-                    u.setDataAssinatura(converter(r.getDate(6)));                   
-                    
-                    return u;
-                } else {                    
+                    return new Convenio(r);
+                } else {
                     return null;
                 }
-
             }
         }
     }
-     
-     public static List<Convenio> buscarTodos() throws SQLException {
+
+    public static List<Convenio> buscarTodos() throws SQLException {
         try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement s = c.prepareStatement(
                         appSettings("convenio.select"))) {
@@ -246,49 +265,88 @@ public class Convenio {
                 List<Convenio> lista = new ArrayList<>();
 
                 while (r.next()) {
-                    Convenio u = new Convenio();
-                    u.setId(r.getInt(1));
-                    u.setEmpresa(Empresa.buscarPorId(r.getInt(2)));
-                    u.setCurso(CursoEnum.values()[r.getInt(3)-1]);
-                    u.setSituacao(SituacaoConvenio.values()[r.getInt(4)-1]);
-                    u.setDataVencimento(converter(r.getDate(5)));
-                    u.setDataAssinatura(converter(r.getDate(6)));    
-                    lista.add(u);
-
+                    lista.add(new Convenio(r));
                 }
 
                 return lista;
             }
         }
-
     }
-     
-     
-      public static List<Convenio> buscarPorIdEmpresa(Integer id) throws SQLException {
+
+    public static List<Convenio> buscarPorIdEmpresa(Integer id) throws SQLException {
         try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement s = c.prepareStatement(
                         appSettings("convenio.select.empresa"))) {
-                s.setInt(1, id);
+            s.setInt(1, id);
 
             try (ResultSet r = s.executeQuery()) {
                 List<Convenio> lista = new ArrayList<>();
 
                 while (r.next()) {
-                    Convenio u = new Convenio();
-                    u.setId(r.getInt(1));
-                    u.setEmpresa(Empresa.buscarPorId(r.getInt(2)));
-                    u.setCurso(CursoEnum.values()[r.getInt(3)-1]);
-                    u.setSituacao(SituacaoConvenio.values()[r.getInt(4)-1]);
-                    u.setDataVencimento(converter(r.getDate(5)));
-                    u.setDataAssinatura(converter(r.getDate(6)));    
-                    lista.add(u);
-
+                    lista.add(new Convenio(r));
                 }
 
                 return lista;
             }
         }
-
     }
 
+    public static List<Convenio> buscarTodos(Date dataAssinatura, Date dataVencimento,
+            String cnpj, SituacaoConvenio situacao, String curso) throws SQLException {
+        
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement stm = con.prepareStatement(appSettings("convenio.select.por.filtro"))) {
+            
+            if(dataAssinatura == null) {
+                stm.setNull(1, Types.DATE);
+                stm.setNull(2, Types.DATE);
+            } else {
+                stm.setDate(1, dataAssinatura);
+                stm.setDate(2, dataAssinatura);
+            }
+            
+            if(dataVencimento == null) {
+                stm.setNull(3, Types.DATE);
+                stm.setNull(4, Types.DATE);
+            } else {
+                stm.setDate(3, dataVencimento);
+                stm.setDate(4, dataVencimento);
+            }
+
+            if(situacao == null) {
+                stm.setNull(5, Types.INTEGER);
+                stm.setNull(6, Types.INTEGER);
+            } else {
+                stm.setInt(5, situacao.ordinal());
+                stm.setInt(6, situacao.ordinal());
+            }
+            
+            cnpj = CpfCnpjUtil.removerFormatacaoCpfCnpj(cnpj);
+            
+            if(StringUtil.isNullOrWhiteSpace(cnpj)) {
+                stm.setNull(7, Types.VARCHAR);
+                stm.setNull(8, Types.VARCHAR);
+            } else {
+                stm.setString(7, cnpj);
+                stm.setString(8, cnpj);
+            }
+            
+            if(StringUtil.isNullOrWhiteSpace(curso)) {
+                stm.setNull(8, Types.VARCHAR);
+                stm.setNull(10, Types.VARCHAR);
+            } else {
+                stm.setString(9, curso);
+                stm.setString(10, "%" + curso + "%");
+            }
+
+            try (ResultSet r = stm.executeQuery()) {
+                List<Convenio> lista = new ArrayList<>();
+                
+                while (r.next()) {
+                    lista.add(new Convenio(r));
+                }
+                return lista;
+            }
+        }
+    }
 }

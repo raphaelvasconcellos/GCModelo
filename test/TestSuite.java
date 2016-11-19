@@ -6,6 +6,7 @@
 
 import br.newtonpaiva.modelo.AlunoTest;
 import br.newtonpaiva.modelo.ContratoTest;
+import br.newtonpaiva.modelo.ConvenioTest;
 import br.newtonpaiva.modelo.CursoTest;
 import br.newtonpaiva.modelo.EmpresaTest;
 import br.newtonpaiva.modelo.UsuarioTest;
@@ -14,6 +15,7 @@ import static br.newtonpaiva.util.ConfigurationManager.DB_URL;
 import static br.newtonpaiva.util.ConfigurationManager.DB_USUARIO;
 import br.newtonpaiva.util.CpfCnpjUtilTest;
 import br.newtonpaiva.util.DateUtilTest;
+import br.newtonpaiva.util.StringUtilTest;
 import br.newtonpaiva.util.ValidacoesUtilTest;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -31,9 +33,9 @@ import org.junit.runners.Suite;
  * @author tarle
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({CpfCnpjUtilTest.class, DateUtilTest.class,
+@Suite.SuiteClasses({CpfCnpjUtilTest.class, DateUtilTest.class, StringUtilTest.class,
     ValidacoesUtilTest.class, UsuarioTest.class, CursoTest.class,
-    EmpresaTest.class, AlunoTest.class, ContratoTest.class})
+    EmpresaTest.class, AlunoTest.class, ConvenioTest.class, ContratoTest.class})
 public class TestSuite {
 
     @BeforeClass

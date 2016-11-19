@@ -5,10 +5,10 @@
  */
 package br.newtonpaiva.util;
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -48,15 +48,17 @@ public class DateUtil {
         }
     }
 
-    public static Integer getDifferenceDays(Date d1, Date d2) {
+    public static Long getDifferenceDays(Date d1, Date d2) {
         if (d1 == null || d2 == null) {
             return null;
         }
 
-        int daysdiff = 0;
         long diff = d2.getTime() - d1.getTime();
         long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
-        daysdiff = (int) diffDays;
-        return daysdiff;
+        return diffDays;
+    }
+    
+    public static Long getDifferenceDays(Calendar d1, Calendar d2) {
+        return getDifferenceDays(d1.getTime(), d2.getTime());
     }
 }

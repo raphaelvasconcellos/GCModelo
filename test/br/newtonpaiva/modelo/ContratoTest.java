@@ -390,10 +390,8 @@ public class ContratoTest {
         assertEquals(TipoContrato.OBRIGATORIO, c.getTipo());
         assertEquals(SituacaoContrato.ANDAMENTO, c.getSituacaoAtual());
         assertEquals("123456", c.getNumProtocolo());
-        assertEquals((new GregorianCalendar(2016, Calendar.OCTOBER, 1)).getTime(),
-                c.getDataEntrada().getTime());
-        assertEquals((new GregorianCalendar(2016, Calendar.OCTOBER, 05)).getTime(),
-                c.getDataInicio().getTime());
+        assertEquals((new GregorianCalendar(2016, Calendar.OCTOBER, 1)), c.getDataEntrada());
+        assertEquals((new GregorianCalendar(2016, Calendar.OCTOBER, 05)), c.getDataInicio());
         assertNull(c.getDataRescisao());
         assertNull(c.getDataTermino());
         assertEquals(new BigDecimal("4.0"), c.getValorCargaHorariaDiaria());

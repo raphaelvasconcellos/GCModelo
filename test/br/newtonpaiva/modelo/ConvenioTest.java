@@ -1,15 +1,12 @@
 package br.newtonpaiva.modelo;
 
+import static org.junit.Assert.*;
+
 import br.newtonpaiva.modelo.excessoes.ConvenioInvalidoException;
-import java.util.Date;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -17,81 +14,112 @@ import org.junit.Test;
  * @author Lucas Fornero
  */
 public class ConvenioTest {
-       
-
     @Test
-    // Salvando novo convenio
     public void testSalvar() throws SQLException {
-        
-        String dateStr = "04/05/2016"; 
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy"); 
-        Date dateObj = null; 
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataAssinatura = Calendar.getInstance();
-        dataAssinatura.setTime(dateObj);
-        
-        dateStr = "04/11/2016";         
-        dateObj = null; 
-        try {
-            dateObj = (Date) curFormater.parse(dateStr);
-        } catch (ParseException ex) {
-            Logger.getLogger(ConvenioTest.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        Calendar dataVencimento = Calendar.getInstance();
-        dataVencimento.setTime(dateObj);
-        
-        Convenio u = new Convenio();
-        u.setCurso(CursoEnum.DIREITO);
-        u.setEmpresa(Empresa.buscarPorId(1));
-        u.setSituacao(SituacaoConvenio.ANDAMENTO);
-        u.setDataAssinatura(dataAssinatura);
-        u.setDataVencimento(dataVencimento);
+        Convenio c = new Convenio();
+        c.setCurso(Curso.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setSituacao(SituacaoConvenio.ANDAMENTO);
+        c.setDataAssinatura(new GregorianCalendar(2016, Calendar.JANUARY, 4));
+        c.setDataVencimento(new GregorianCalendar(2016, Calendar.NOVEMBER, 4));
         
         try {
-            // Inserir
-            u.salvar();            
-            Assert.assertNotNull(u.getId());
+            c.salvar();            
+            assertNotNull(c.getId());
             
             // Atualizar
-            u.setCurso(CursoEnum.ENFERMAGEM);            
-            u.salvar();
+            c.setCurso(Curso.buscarPorId(2));            
+            c.salvar();
             
-            int numLinhasExcluidas = new Convenio().excluir(u.getId());
-            Assert.assertEquals(1, numLinhasExcluidas);
+            int numLinhasExcluidas = Convenio.excluir(c.getId());
+            assertEquals(1, numLinhasExcluidas);
         } catch (ConvenioInvalidoException | SQLException ex) {
-            Assert.fail(ex.getMessage());
+            fail(ex.getMessage());
         }
     }
-    @Test(expected = ConvenioInvalidoException.class)
+    
+    @Test
     public void testEmpresa() throws ConvenioInvalidoException, SQLException {
-        Convenio u = new Convenio();
-        u.setCurso(CursoEnum.DIREITO);
-//        u.setEmpresa(Empresa.buscarPorId(1));
-        u.setSituacao(SituacaoConvenio.ANDAMENTO);        
-        
-        try {            
-            u.salvar();            
-        } catch(ConvenioInvalidoException | SQLException ex){           
-            throw (new ConvenioInvalidoException(ex.getMessage()));
+        Convenio c = new Convenio();
+        c.setCurso(Curso.buscarPorId(1));
+        c.setSituacao(SituacaoConvenio.ANDAMENTO);
+        try {
+            c.salvar();
+            fail("Salvou convenio sem empresa");
+        }catch(ConvenioInvalidoException e) {
+            assertEquals("A empresa deve ser informada.", e.getMessage());
         }
     }
     
+    @Test
+    public void testCurso() throws ConvenioInvalidoException, SQLException {
+        Convenio c = new Convenio();
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setSituacao(SituacaoConvenio.ANDAMENTO);        
+        try {
+            c.salvar();
+            fail("Salvou convenio sem curso");
+        }catch(ConvenioInvalidoException e) {
+            assertEquals("O curso deve ser informada.", e.getMessage());
+        }
+    }
     
-    @Test(expected = ConvenioInvalidoException.class)
+    @Test
     public void testSituacao() throws ConvenioInvalidoException, SQLException {
-        Convenio u = new Convenio();
-        u.setCurso(CursoEnum.DIREITO);
-        u.setEmpresa(Empresa.buscarPorId(1));
-//        u.setSituacao(SituacaoConvenio.ANDAMENTO);        
-        
-        try {            
-            u.salvar();            
-        } catch(ConvenioInvalidoException | SQLException ex){           
-            throw (new ConvenioInvalidoException(ex.getMessage()));
+        Convenio c = new Convenio();
+        c.setCurso(Curso.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        try {
+            c.salvar();
+            fail("Salvou convenio sem situacao");
+        }catch(ConvenioInvalidoException e) {
+            assertEquals("A situação deve ser informada.", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testDataAssinatura() throws ConvenioInvalidoException, SQLException {
+        Convenio c = new Convenio();
+        c.setCurso(Curso.buscarPorId(1));
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setSituacao(SituacaoConvenio.ANDAMENTO);  
+        c.setDataVencimento(new GregorianCalendar(2016, Calendar.NOVEMBER, 4));
+        try {
+            c.salvar();
+            fail("Salvou convenio sem data assinatura");
+        }catch(ConvenioInvalidoException e) {
+            assertEquals("A data da assinatura de ser informada.", e.getMessage());
+        }
+    }
+    
+     @Test
+    public void testDataVencimento() throws ConvenioInvalidoException, SQLException {
+        Convenio c = new Convenio();
+        c.setCurso(Curso.buscarPorId(1));
+        c.setSituacao(SituacaoConvenio.ANDAMENTO);  
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setDataAssinatura(new GregorianCalendar(2016, Calendar.JANUARY, 4));
+        try {
+            c.salvar();
+            fail("Salvou convenio sem vencimento");
+        }catch(ConvenioInvalidoException e) {
+            assertEquals("A data de vencimento de ser informada.", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testDataAssinaturaMaiorDataVencimento() throws ConvenioInvalidoException, SQLException {
+        Convenio c = new Convenio();
+        c.setCurso(Curso.buscarPorId(1));
+        c.setSituacao(SituacaoConvenio.ANDAMENTO);  
+        c.setEmpresa(Empresa.buscarPorId(1));
+        c.setDataAssinatura(new GregorianCalendar(2017, Calendar.JANUARY, 4));
+        c.setDataVencimento(new GregorianCalendar(2016, Calendar.NOVEMBER, 4));
+        try {
+            c.salvar();
+            fail("Salvou convenio com data de assinatura maior que a data de vencimento.");
+        }catch(ConvenioInvalidoException e) {
+            assertEquals("Data de vencimento menor que a data de assinatura.", e.getMessage());
         }
     }
     
@@ -100,11 +128,9 @@ public class ConvenioTest {
      * @throws java.lang.Exception
      */
     @Test
-    public void testBuscarPorId() throws Exception {
-        
-        Convenio u = Convenio.buscarPorId(1);       
-        System.out.println(u.toString());
-               
+    public void testBuscarPorId() throws Exception {        
+        Convenio c = Convenio.buscarPorId(1);     
+        validarConvenioPadrao(c);
     }
 
     /**
@@ -113,9 +139,28 @@ public class ConvenioTest {
     */ 
     @Test
     public void testBuscarTodos() throws SQLException {
-        List<Convenio> u = Convenio.buscarTodos();
-        for(Object i : u)
-            System.out.println(i);
+        List<Convenio> c = Convenio.buscarTodos();
+        assertEquals(1, c.size());
+        validarConvenioPadrao(c.get(0));
     }
     
+     /**
+     * Test of buscarTodos method, of class Empresa.     
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro() throws SQLException {
+        List<Convenio> c = Convenio.buscarTodos(null, null, 
+                "16.521.155/0001-03", SituacaoConvenio.CANCELADO, "direi");
+        assertEquals(1, c.size());
+        validarConvenioPadrao(c.get(0));
+    }
+    
+    private void validarConvenioPadrao(Convenio c) throws SQLException {
+        assertEquals(Empresa.buscarPorId(1), c.getEmpresa());
+        assertEquals(Curso.buscarPorId(1), c.getCurso());
+        assertEquals(SituacaoConvenio.CANCELADO, c.getSituacao());
+        assertEquals(new GregorianCalendar(2017, Calendar.NOVEMBER, 1), c.getDataVencimento());
+        assertEquals(new GregorianCalendar(2016, Calendar.NOVEMBER, 19), c.getDataAssinatura());
+    }
 }

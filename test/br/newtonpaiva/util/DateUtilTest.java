@@ -5,8 +5,8 @@
  */
 package br.newtonpaiva.util;
 
-import java.sql.Date;
 import java.util.Calendar;
+import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -59,7 +59,7 @@ public class DateUtilTest {
     @Test
     public void testConverter_Date() {
         System.out.println("converter");
-        Date data = null;
+        java.sql.Date data = null;
         Calendar expResult = null;
         Calendar result = DateUtil.converter(data);
         assertEquals(expResult, result);
@@ -89,8 +89,23 @@ public class DateUtilTest {
         System.out.println("getDifferenceDays");
         Date d1 = null;
         Date d2 = null;
-        Integer expResult = null;
-        Integer result = DateUtil.getDifferenceDays(d1, d2);
+        Long expResult = null;
+        Long result = DateUtil.getDifferenceDays(d1, d2);
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+    
+    /**
+     * Test of getDifferenceDays method, of class DateUtil.
+     */
+    @Test
+    public void testGetDifferenceDays2() {
+        System.out.println("getDifferenceDays");
+        Calendar d1 = null;
+        Calendar d2 = null;
+        Long expResult = null;
+        Long result = DateUtil.getDifferenceDays(d1, d2);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

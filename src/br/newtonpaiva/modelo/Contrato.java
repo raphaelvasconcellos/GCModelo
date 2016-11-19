@@ -456,7 +456,7 @@ public class Contrato {
         }
 
         if ("N".equals(getAluno().getDeficiente())) {
-            Integer difDay = getDifferenceDays(converter(getDataInicio()), converter(getDataTermino()));
+            Long difDay = getDifferenceDays(converter(getDataInicio()), converter(getDataTermino()));
             Integer diasAntigos = buscarTempoCotratoAlunoEmpresa(getAluno().getId(), getEmpresa().getId(), getId());
 
             if (diasAntigos + difDay > DOIS_ANOS) {
