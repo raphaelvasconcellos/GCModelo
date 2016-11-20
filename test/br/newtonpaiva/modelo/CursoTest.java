@@ -5,19 +5,36 @@
  */
 package br.newtonpaiva.modelo;
 
+import static org.junit.Assert.*;
+
+import br.newtonpaiva.modelo.excecoes.CursoInvalidoException;
+import java.sql.SQLException;
 import java.util.List;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
 
 /**
  *
  * @author tarle
  */
 public class CursoTest {
+    
+    public static final String DIREITO = "Direito";
+    public static final String ENFERMAGEM = "Enfermagem";
+    public static final String ENGENHARIA_CIVIL = "Engenharia Civil";
+    public static final String ENGENHARIA_PRODUCAO = "Engenharia de ProduÃ§Ã£o";
+    public static final String ENGENHARIA_ELETRICA = "Engenharia Eletrica";
+    public static final String ENGENHARIA_MECANICA = "Engenharia Mecanica";
+    public static final String ENGENHARIA_QUIMICA = "Engenharia Quimica";
+    public static final String FARMACIA = "Farmacia";
+    public static final String ODONTOLOGIA = "Odontologia";
+    public static final String PSICOLOGIA = "Psicologia";
+    public static final String SISTEMAS_INFORMACAO = "Sistemas de Informação";
+    
     
     public CursoTest() {
     }
@@ -39,266 +56,118 @@ public class CursoTest {
     }
 
     /**
-     * Test of getId method, of class Curso.
-     */
-    @Test
-    public void testGetId() {
-        System.out.println("getId");
-        Curso instance = new Curso();
-        Integer expResult = null;
-        Integer result = instance.getId();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setId method, of class Curso.
-     */
-    @Test
-    public void testSetId() {
-        System.out.println("setId");
-        Integer id = null;
-        Curso instance = new Curso();
-        instance.setId(id);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getCurso method, of class Curso.
-     */
-    @Test
-    public void testGetCurso() {
-        System.out.println("getCurso");
-        Curso instance = new Curso();
-        String expResult = "";
-        String result = instance.getCurso();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setCurso method, of class Curso.
-     */
-    @Test
-    public void testSetCurso() {
-        System.out.println("setCurso");
-        String curso = "";
-        Curso instance = new Curso();
-        instance.setCurso(curso);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getTotalConvenio method, of class Curso.
-     */
-    @Test
-    public void testGetTotalConvenio() {
-        System.out.println("getTotalConvenio");
-        Curso instance = new Curso();
-        Integer expResult = null;
-        Integer result = instance.getTotalConvenio();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setTotalConvenio method, of class Curso.
-     */
-    @Test
-    public void testSetTotalConvenio() {
-        System.out.println("setTotalConvenio");
-        Integer totalConvenio = null;
-        Curso instance = new Curso();
-        instance.setTotalConvenio(totalConvenio);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getTotalAluno method, of class Curso.
-     */
-    @Test
-    public void testGetTotalAluno() {
-        System.out.println("getTotalAluno");
-        Curso instance = new Curso();
-        Integer expResult = null;
-        Integer result = instance.getTotalAluno();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of setTotalAluno method, of class Curso.
-     */
-    @Test
-    public void testSetTotalAluno() {
-        System.out.println("setTotalAluno");
-        Integer totalAluno = null;
-        Curso instance = new Curso();
-        instance.setTotalAluno(totalAluno);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toString method, of class Curso.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        Curso instance = new Curso();
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of hashCode method, of class Curso.
-     */
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-        Curso instance = new Curso();
-        int expResult = 0;
-        int result = instance.hashCode();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of equals method, of class Curso.
-     */
-    @Test
-    public void testEquals() {
-        System.out.println("equals");
-        Object obj = null;
-        Curso instance = new Curso();
-        boolean expResult = false;
-        boolean result = instance.equals(obj);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
      * Test of salvar method, of class Curso.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testSalvar() throws Exception {
-        System.out.println("salvar");
-        Curso instance = new Curso();
-        instance.salvar();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testSalvar() throws SQLException {
+        Curso c = new Curso();
+        c.setCurso("Teste de cadastro");
+        
+        try {
+            c.salvar();            
+            assertNotNull(c.getId());
+            
+            // Atualizar
+            c.setCurso("Alteração do curso de teste");            
+            c.salvar();
+            
+            int numLinhasExcluidas = Curso.excluir(c.getId());
+            assertEquals(1, numLinhasExcluidas);
+        } catch (CursoInvalidoException e) {
+            fail(e.getMessage());
+        }
     }
-
-    /**
-     * Test of excluir method, of class Curso.
-     */
-    @Test
-    public void testExcluir() throws Exception {
-        System.out.println("excluir");
-        Integer id = null;
-        Curso instance = new Curso();
-        int expResult = 0;
-        int result = instance.excluir(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
+   
     /**
      * Test of buscarPorId method, of class Curso.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testBuscarPorId() throws Exception {
-        System.out.println("buscarPorId");
-        Integer id = null;
-        Curso expResult = null;
-        Curso result = Curso.buscarPorId(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of buscarPorIdNome method, of class Curso.
-     */
-    @Test
-    public void testBuscarPorIdNome() throws Exception {
-        System.out.println("buscarPorIdNome");
-        Integer id = null;
-        String Nome = "";
-        List<Curso> expResult = null;
-        List<Curso> result = Curso.buscarPorIdNome(id, Nome);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testBuscarPorId() throws SQLException {
+        Curso c = Curso.buscarPorId(1);     
+        assertEquals(DIREITO, c.getCurso());
     }
 
     /**
      * Test of buscarPorNome method, of class Curso.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testBuscarPorNome() throws Exception {
-        System.out.println("buscarPorNome");
-        String nome = "";
-        List<Curso> expResult = null;
-        List<Curso> result = Curso.buscarPorNome(nome);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testBuscarPorNome() throws SQLException {
+        List<Curso> c = Curso.buscarPorNome("Engenharia");
+        assertEquals(5, c.size());
+        assertEquals(ENGENHARIA_CIVIL, c.get(0).getCurso());
+        assertEquals(ENGENHARIA_PRODUCAO, c.get(1).getCurso());
+        assertEquals(ENGENHARIA_ELETRICA, c.get(2).getCurso());
+        assertEquals(ENGENHARIA_MECANICA, c.get(3).getCurso());
+        assertEquals(ENGENHARIA_QUIMICA, c.get(4).getCurso());
     }
 
     /**
      * Test of buscarTodos method, of class Curso.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testBuscarTodos() throws Exception {
-        System.out.println("buscarTodos");
-        String Nome = "";
-        List<Curso> expResult = null;
-        List<Curso> result = Curso.buscarTodos(Nome);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testBuscarTodos() throws SQLException {
+        List<Curso> c = Curso.buscarTodos();
+        assertEquals(11, c.size());
+        assertEquals(DIREITO, c.get(0).getCurso());
+        assertEquals(ENFERMAGEM, c.get(1).getCurso());
+        assertEquals(ENGENHARIA_CIVIL, c.get(2).getCurso());
+        assertEquals(ENGENHARIA_PRODUCAO, c.get(3).getCurso());
+        assertEquals(ENGENHARIA_ELETRICA, c.get(4).getCurso());
+        assertEquals(ENGENHARIA_MECANICA, c.get(5).getCurso());        
+        assertEquals(ENGENHARIA_QUIMICA, c.get(6).getCurso());
     }
 
     /**
      * Test of buscarPorTotalConvenios method, of class Curso.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testBuscarPorTotalConvenios() throws Exception {
-        System.out.println("buscarPorTotalConvenios");
-        Integer id = null;
-        Curso expResult = null;
-        Curso result = Curso.buscarPorTotalConvenios(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testCarregarConvenios() throws SQLException {
+        Curso c = Curso.buscarPorId(1);
+        c.carregarConvenios();
+        
+        assertEquals(1, c.getListaConvenios().size());
+        ConvenioTest.validarConvenioPadrao(c.getListaConvenios().get(0));
     }
 
     /**
      * Test of buscarPorTotalAlunos method, of class Curso.
+     * @throws java.sql.SQLException
      */
     @Test
-    public void testBuscarPorTotalAlunos() throws Exception {
-        System.out.println("buscarPorTotalAlunos");
-        Integer id = null;
-        Curso expResult = null;
-        Curso result = Curso.buscarPorTotalAlunos(id);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testBuscarPorTotalAlunos() throws SQLException {
+        Curso c = Curso.buscarPorId(1);
+        c.carregarAlunos();
+        
+        assertEquals(1, c.getListaAlunos().size());
+        AlunoTest.validarAlunoDeficiente(c.getListaAlunos().get(0));
     }
     
+    /**
+     * Test of getTotalConvenio method, of class Curso.
+     * @throws java.sql.SQLException
+     */
+    @Test
+    public void testGetTotalConvenio() throws SQLException {
+        Curso c = Curso.buscarPorId(1);
+        c.carregarConvenios();
+        
+        assertEquals(1, c.getTotalConvenio());
+    }
+
+    /**
+     * Test of getTotalAluno method, of class Curso.
+     * @throws java.sql.SQLException
+     */
+    @Test
+    public void testGetTotalAluno() throws SQLException {
+        Curso c = Curso.buscarPorId(1);
+        c.carregarAlunos();
+        
+        assertEquals(1, c.getTotalAluno());
+    }
 }

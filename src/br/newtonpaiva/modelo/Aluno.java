@@ -5,22 +5,6 @@
  */
 package br.newtonpaiva.modelo;
 
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoAlunoNuloException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoCPFIdenticoException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoCpfNuloException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoCpfTamanhoException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoDeficienteNuloException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoDeficienteTamanhoException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoEmailNuloException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoEmailTamanhoException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoEmalIdenticoException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoNomeNuloException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoNomeTamanhoException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoRAIdenticoException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoRATamanhoException;
-import br.newtonpaiva.modelo.excecoes.AlunoInvalidoRaNuloException;
-import br.newtonpaiva.modelo.excecoes.CpfInvalidoException;
-import br.newtonpaiva.modelo.excecoes.EmailInvalidoException;
 import br.newtonpaiva.modelo.excessoes.AlunoInvalidoException;
 import static br.newtonpaiva.util.ConfigurationManager.*;
 import java.sql.Connection;
@@ -254,6 +238,22 @@ public class Aluno {
                     return new Aluno(r);
                 else
                     return null;
+            }
+        }
+    }
+    
+    public static List<Aluno> buscarPorCurso(Integer idCurso) throws SQLException {
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement s = c.prepareStatement(appSettings("aluno.select.curso"))) {
+
+            s.setInt(1, idCurso);
+
+            try (ResultSet r = s.executeQuery()) {
+                List<Aluno> lista = new ArrayList();
+                while (r.next()) {
+                    lista.add(new Aluno(r));
+                }
+                return lista;
             }
         }
     }

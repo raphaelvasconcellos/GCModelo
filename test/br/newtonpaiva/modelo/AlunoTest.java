@@ -115,6 +115,19 @@ public class AlunoTest {
         validarAlunoPadrao(a);
     }    
 
+     @Test
+    public void testBuscarPorCurso() throws SQLException {
+        List<Aluno> a = Aluno.buscarPorCurso(1);
+        
+        assertEquals((int) 1, a.size());
+        validarAlunoDeficiente(a.get(0));
+        
+        a = Aluno.buscarPorCurso(10);
+        
+        assertEquals((int) 1, a.size());
+        validarAlunoPadrao(a.get(0));
+    }
+    
     /**
      * Test of buscarTodos method, of class Aluno.
     */ 
@@ -146,9 +159,9 @@ public class AlunoTest {
         validarAlunoPadrao(a.get(0));
     }
     
-    public static void validarAlunoPadrao(Aluno a) {
+    public static void validarAlunoPadrao(Aluno a) throws SQLException {
         assertEquals(1, (int) a.getId());
-        assertEquals(CursoEnum.SISTEMA_INFORMACAO, a.getCurso());
+        assertEquals(Curso.buscarPorId(10), a.getCurso());
         assertEquals("11223344" , a.getRa());
         assertEquals("Aluno Teste", a.getNome());
         assertEquals("11111111111", a.getCpf());
@@ -157,9 +170,9 @@ public class AlunoTest {
         assertEquals("N", a.getDeficiente());              
     }
 
-    private void validarAlunoDeficiente(Aluno a) {
+    public static void validarAlunoDeficiente(Aluno a) throws SQLException {
         assertEquals(2, (int) a.getId());
-        assertEquals(CursoEnum.ENFERMAGEM, a.getCurso());
+        assertEquals(Curso.buscarPorId(1), a.getCurso());
         assertEquals("22334455" , a.getRa());
         assertEquals("Aluno Deficiente", a.getNome());
         assertEquals("22222222222", a.getCpf());

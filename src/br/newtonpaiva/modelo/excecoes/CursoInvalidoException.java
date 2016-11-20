@@ -9,9 +9,13 @@ package br.newtonpaiva.modelo.excecoes;
  *
  * @author Guilherme
  */
-public class AlunoInvalidoEmailNuloException extends Exception {
+public class CursoInvalidoException extends Exception {
 
-    public AlunoInvalidoEmailNuloException(String msg) {
-        super(msg);
+    public CursoInvalidoException(String message) {
+        super(message);
+    }
+    
+    public CursoInvalidoException(String message, Exception cause) {
+        super(message, cause);
     }
 }

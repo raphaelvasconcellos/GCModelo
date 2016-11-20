@@ -66,53 +66,21 @@ and open the template in the editor.
     </entry>                                 
                                     
     <!-- CURSO -->
-    <entry key="curso.insert">
-        INSERT INTO curso 
-        (nom_curso)
-        value (?)
-    </entry>
-    <entry key="curso.update">
-        UPDATE curso 
-        SET nom_curso = ?
-        WHERE (cod_curso = ?)
-    </entry>
-    <entry key="curso.delete">
-        DELETE FROM curso 
-        WHERE (cod_curso = ?)
-    </entry>
+    <entry key="curso.insert">INSERT INTO curso (nom_curso) VALUE (?)</entry>
+    <entry key="curso.update">UPDATE curso SET nom_curso = ? WHERE cod_curso = ? </entry>
+    <entry key="curso.delete">DELETE FROM curso WHERE cod_curso = ?</entry>
     <entry key="curso.select.id">
         SELECT cod_curso, nom_curso 
-        FROM curso 
-        WHERE cod_curso = ?
+          FROM curso 
+         WHERE cod_curso = ?
     </entry>
-    <entry key="curso.select">
-        SELECT cod_curso, nom_curso 
-        FROM curso
-        WHERE (nom_curso like ?)
-    </entry>
+    <entry key="curso.select">SELECT cod_curso, nom_curso FROM curso</entry>
     <entry key="curso.select.nome">
         SELECT cod_curso, nom_curso 
-        FROM curso 
-        WHERE (nom_curso = ?)
-    </entry>
-    <entry key="curso.select.total.convenio">
-        SELECT count(*) as total 
-        FROM convenio 
-        WHERE (cod_curso = ?)
-    </entry>
-    <entry key="curso.select.total.aluno">
-        SELECT count(*) as total 
-        FROM aluno 
-        WHERE cod_curso = ?
-    </entry>
-    
-    <entry key="curso.select.id.nome">
-        SELECT cod_curso, nom_curso 
           FROM curso 
-         WHERE cod_curso != ? 
-           AND nom_curso = ?
-    </entry>                                
-                                    
+         WHERE nom_curso LIKE ?
+    </entry>
+                        
     <!-- ALUNO -->              
     <entry key="aluno.insert"> 
         insert into aluno(        
@@ -156,6 +124,17 @@ and open the template in the editor.
                 IND_DEFICIENTE 
            FROM aluno
           WHERE COD_ALUNO = ?
+    </entry>
+    <entry key="aluno.select.curso">
+        SELECT  COD_ALUNO, 
+                COD_CURSO, 
+                NUM_RA, 
+                NOM_ALUNO, 
+                NUM_CPF_ALUNO, 
+                DES_EMAIL, 
+                IND_DEFICIENTE 
+           FROM aluno
+          WHERE COD_CURSO = ?
     </entry>
     <entry key="aluno.select.ra">
         SELECT  COD_ALUNO, 
@@ -333,7 +312,16 @@ and open the template in the editor.
            from convenio
           where cod_convenio = ?;
     </entry>
-    
+    <entry key="convenio.select.curso">
+        select  cod_convenio,
+                cod_empresa,
+                cod_curso, 
+                cod_convenio_situacao,
+                dat_vencimento,
+                dat_assinatura
+           from convenio
+          where cod_curso = ?;
+    </entry>
     <entry key="convenio.select.empresa">
         select  cod_convenio,
                 cod_empresa,

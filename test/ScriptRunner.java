@@ -255,7 +255,9 @@ public class ScriptRunner {
             script.runScript(scriptCreate);
             script.runScript(scriptInsert);
             
-            JOptionPane.showMessageDialog(null, "Banco atualizado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Banco atualizado com sucesso!");            
         }
+        
+        System.exit(0);
     }
 }

@@ -3,15 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.newtonpaiva.modelo.excessoes;
+package br.newtonpaiva.modelo.excecoes;
 
 /**
  *
- * @author pablo
+ * @author Guilherme
  */
-public class ConvenioInvalidoException extends Exception{
-    public ConvenioInvalidoException(String msg){
-        //super operador que chama a superclasse
-        super(msg);
+public class ConvenioInvalidoException extends Exception {
+    public ConvenioInvalidoException(String message) {
+        super(message);
+    }
+    
+    public ConvenioInvalidoException(String message, Exception cause) {
+        super(message, cause);
     }
 }

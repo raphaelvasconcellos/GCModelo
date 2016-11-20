@@ -5,14 +5,12 @@
  */
 package br.newtonpaiva.modelo;
 
-import br.newtonpaiva.modelo.excecoes.CursoInvalidoIdNomeException;
-import br.newtonpaiva.modelo.excecoes.CursoInvalidoNomeException;
-import br.newtonpaiva.modelo.excecoes.CursoInvalidoNomeNuloException;
-import br.newtonpaiva.modelo.excecoes.CursoInvalidoNomeTamanhoException;
+import br.newtonpaiva.modelo.excecoes.CursoInvalidoException;
 import static br.newtonpaiva.util.ConfigurationManager.DB_SENHA;
 import static br.newtonpaiva.util.ConfigurationManager.DB_URL;
 import static br.newtonpaiva.util.ConfigurationManager.DB_USUARIO;
 import static br.newtonpaiva.util.ConfigurationManager.appSettings;
+import br.newtonpaiva.util.StringUtil;
 import static br.newtonpaiva.util.ValidacoesUtil.validarTamanhoTexto;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,8 +28,10 @@ import java.util.Objects;
  */
 public class Curso {
 
-    private Integer id;//cod_curso
-    private String curso;//nom_curso
+    private Integer id;
+    private String curso;
+    private List<Aluno> listaAlunos;
+    private List<Convenio> listaConvenios;
     private Integer totalConvenio;
     private Integer totalAluno;
 
@@ -74,32 +74,42 @@ public class Curso {
 
     /**
      * @return the totalConvenio
+     * @throws java.sql.SQLException
      */
-    public Integer getTotalConvenio() {
-        return totalConvenio;
-    }
-
-    /**
-     * @param totalConvenio the totalConvenio to set
-     */
-    public void setTotalConvenio(Integer totalConvenio) {
-        this.totalConvenio = totalConvenio;
+    public int getTotalConvenio() throws SQLException {
+        if(listaConvenios == null)
+            carregarConvenios();
+        
+        return listaConvenios == null ? 0 : listaConvenios.size();
     }
 
     /**
      * @return the totalAluno
+     * @throws java.sql.SQLException
      */
-    public Integer getTotalAluno() {
-        return totalAluno;
+    public int getTotalAluno() throws SQLException {
+        if(listaAlunos == null)
+            carregarAlunos();
+        
+        return listaAlunos == null ? 0 : listaAlunos.size();
     }
 
-    /**
-     * @param totalAluno the totalAluno to set
-     */
-    public void setTotalAluno(Integer totalAluno) {
-        this.totalAluno = totalAluno;
+    public List<Aluno> getListaAlunos() {
+        return listaAlunos;
     }
 
+    public void setListaAlunos(List<Aluno> listaAlunos) {
+        this.listaAlunos = listaAlunos;
+    }
+
+    public List<Convenio> getListaConvenios() {
+        return listaConvenios;
+    }
+
+    public void setListaConvenios(List<Convenio> listaConvenios) {
+        this.listaConvenios = listaConvenios;
+    }
+    
     @Override
     public String toString() {
         return "Curso{" + "id=" + id + ", curso=" + curso + '}';
@@ -133,129 +143,71 @@ public class Curso {
     /*
     * Utilizado para inserir ou alterar
      */
-    public void salvar() throws SQLException, CursoInvalidoNomeNuloException, CursoInvalidoIdNomeException, CursoInvalidoNomeTamanhoException,
-            CursoInvalidoNomeException {
-        /*
-        Valida algumas regras de campos
-         */
+    public void salvar() throws SQLException, CursoInvalidoException {
         validacoes();
-        /*
-        * Salva no banco de dados
-         */
-        if (getId() == null) {//Insere se o ID estiver vazio
+        
+        try {
+            if (getId() == null) {
 
-            //Verifica se o nome do curso existe no banco de dados
-            if (buscarPorNome(getCurso()).size() > 0) {
-                throw new CursoInvalidoNomeException();
-            }
-
-            //Conexão com o banco de dados já abre e fecha
-            try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                    PreparedStatement stm = con.prepareStatement(appSettings("curso.insert"), Statement.RETURN_GENERATED_KEYS)) {
-                //Prepara os parametros de entrada para o banco de dados
-                stm.setString(1, getCurso());//nom_curso
-                //Executa o insert
-                stm.executeUpdate();
-                //Retorna o ID que acabou de inserir ou retorna o erro
-                ResultSet rs = stm.getGeneratedKeys();
-                if (rs.next()) {
-                    setId(rs.getInt(1));
-                } else {
-                    throw new SQLException("Falha ao inserir o curso");
+                try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                        PreparedStatement stm = con.prepareStatement(appSettings("curso.insert"), Statement.RETURN_GENERATED_KEYS)) {
+                    stm.setString(1, getCurso());
+                    stm.executeUpdate();
+                    ResultSet rs = stm.getGeneratedKeys();
+                    if (rs.next()) {
+                        setId(rs.getInt(1));
+                    } else {
+                        throw new SQLException("Falha ao inserir o curso");
+                    }
                 }
-
+            } else {
+                
+                try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                        PreparedStatement stm = con.prepareStatement(appSettings("curso.update"))) {
+                    stm.setString(1, getCurso());
+                    stm.setInt(2, getId());
+                    stm.executeUpdate();
+                }
             }
-        } else {//Altera se o ID não estiver vazio
-            //Verifica se o nome do curso diferente do ID existe no banco de dados
-            if (buscarPorIdNome(getId(), getCurso()).size() > 0) {
-                throw new CursoInvalidoIdNomeException();
+        }catch(SQLException e) {
+            if(e.getMessage().contains("curso_i01")) {
+                throw new CursoInvalidoException("Já existe um curso cadastrado com este nome.");
             }
-
-            //Conexão com o banco de dados já abre e fecha
-            try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                    PreparedStatement stm = con.prepareStatement(appSettings("curso.update"))) {
-                //Prepara os parametros de entrada para o banco de dados
-                stm.setString(1, getCurso());//nom_curso
-                stm.setInt(2, getId());//cod_curso
-                //Executa o Update
-                stm.executeUpdate();
-            }
+            
+            throw e;
         }
     }
 
-    /*
-    * utilizar para excluir um registro passando um ID
-     */
-    public int excluir(Integer id) throws SQLException {
-        //Conexão com o banco de dados já abre e fecha
+    public static int excluir(Integer id) throws SQLException {
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(appSettings("curso.delete"))) {
-            //Prepara os parametros de entrada para o banco de dados
             stm.setInt(1, id);
-            //Executa a exclusão
             return stm.executeUpdate();
         }
     }
 
-    /*
-    * Retorna a classe de cursos pelo id
-     */
     public static Curso buscarPorId(Integer id) throws SQLException {
-        //Conexão com o banco de dados já abre e fecha
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(appSettings("curso.select.id"))) {
-            //Prepara os parametros de entrada para o banco de dados
             stm.setInt(1, id);
-            //Retorna os dados em uma array
             try (ResultSet r = stm.executeQuery()) {
-                if (r.next()) {
+                if (r.next())
                     return new Curso(r);
-                } else {
+                else
                     return null;
-                }
             }
         }
     }
 
-    /*
-    * Retorna a classe de cursos pelo nome e diferente do ID, somente no caso de lteração
-     */
-    public static List<Curso> buscarPorIdNome(Integer id, String Nome) throws SQLException {
-        //Conexão com o banco de dados já abre e fecha
-        try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                PreparedStatement stm = con.prepareStatement(appSettings("curso.select.id.nome"))) {
-            //Prepara os parametros de entrada para o banco de dados
-            stm.setInt(1, id);
-            stm.setString(2, Nome);
-            //Retorna os dados em uma array
-            try (ResultSet r = stm.executeQuery()) {
-                List<Curso> lista = new ArrayList<>();
-                while (r.next()) {
-                    Curso u = new Curso(r);
-                    lista.add(u);
-                }
-
-                return lista;
-            }
-        }
-    }
-
-    /*
-    * Retorna a classe de cursos pelo nome
-     */
     public static List<Curso> buscarPorNome(String nome) throws SQLException {
-        //Conexão com o banco de dados já abre e fecha
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(appSettings("curso.select.nome"))) {
-            //Prepara os parametros de entrada para o banco de dados
-            stm.setString(1, nome);
-            //Retorna os dados em uma array
+            stm.setString(1, "%" + nome + "%");
             try (ResultSet r = stm.executeQuery()) {
                 List<Curso> lista = new ArrayList<>();
 
                 while (r.next()) {
-                    Curso u = new Curso(r);
-                    lista.add(u);
+                    lista.add(new Curso(r));
                 }
 
                 return lista;
@@ -263,89 +215,39 @@ public class Curso {
         }
     }
 
-    /*
-    * Retorna toda a lista de cursos 
-     */
-    public static List<Curso> buscarTodos(String Nome) throws SQLException {
-        //Conexão com o banco de dados já abre e fecha
+    public static List<Curso> buscarTodos() throws SQLException {
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(appSettings("curso.select"))) {
-            //Prepara os parametros de entrada para o banco de dados
-            stm.setString(1, "%" + Nome + "%");
-            //Retorna os dados em uma array
             try (ResultSet r = stm.executeQuery()) {
                 List<Curso> lista = new ArrayList<>();
 
                 while (r.next()) {
-                    Curso u = new Curso(r);
-                    lista.add(u);
+                    lista.add(new Curso(r));
                 }
 
                 return lista;
             }
-            //Retorna vazio se não existir registro
         }
     }
 
-    /*
-    * Retorna o total de contratos
-     */
-    public static Curso buscarPorTotalConvenios(Integer id) throws SQLException {
-        //Conexão com o banco de dados já abre e fecha
-        try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                PreparedStatement stm = con.prepareStatement(appSettings("curso.select.total.convenio"))) {
-            //Prepara os parametros de entrada para o banco de dados
-            stm.setInt(1, id);
-            //Retorna os dados em uma array
-            try (ResultSet r = stm.executeQuery()) {
-                if (r.next()) {
-                    Curso c = new Curso();
-                    c.setTotalConvenio(r.getInt(1));//Total de contratos do aluno
-                    return c;
-                } else {
-                    return null;
-                }
-            }
-        }
+    public void carregarConvenios() throws SQLException {
+        if(getId() != null)
+            setListaConvenios(Convenio.buscarPorCurso(getId()));
     }
 
-    /*
-    * Retorna o total de contratos
-     */
-    public static Curso buscarPorTotalAlunos(Integer id) throws SQLException {
-        //Conexão com o banco de dados já abre e fecha
-        try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                PreparedStatement stm = con.prepareStatement(appSettings("curso.select.total.aluno"))) {
-            //Prepara os parametros de entrada para o banco de dados
-            stm.setInt(1, id);
-            //Retorna os dados em uma array
-            try (ResultSet r = stm.executeQuery()) {
-                if (r.next()) {
-                    Curso c = new Curso();
-                    c.setTotalAluno(r.getInt(1));//Total de contratos do aluno
-                    return c;
-                } else {
-                    return null;
-                }
-            }
-        }
+    public void carregarAlunos() throws SQLException {
+        if(getId() != null)        
+            setListaAlunos(Aluno.buscarPorCurso(getId()));
     }
 
-    private void validacoes() throws CursoInvalidoNomeNuloException, CursoInvalidoNomeTamanhoException {
+    private void validacoes() throws CursoInvalidoException {
 
-        /*
-        * Nome é nulo
-         */
-        if (getCurso().equals("")) {
-            throw new CursoInvalidoNomeNuloException();
+        if (StringUtil.isNullOrWhiteSpace(curso)) {
+            throw new CursoInvalidoException("O nome do curso deve ser informado.");
         }
 
-        /*
-        * Tamanho da descrição do tipo de contrato
-         */
         if (!validarTamanhoTexto(getCurso(), 100)) {
-            throw new CursoInvalidoNomeTamanhoException();
+            throw new CursoInvalidoException("O nome do curso deve ter menos de 100 caracteres.");
         }
     }
-
 }

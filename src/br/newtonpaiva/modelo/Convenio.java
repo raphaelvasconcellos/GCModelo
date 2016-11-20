@@ -5,11 +5,10 @@
  */
 package br.newtonpaiva.modelo;
 
+import br.newtonpaiva.modelo.excecoes.ConvenioInvalidoException;
 import static br.newtonpaiva.util.ConfigurationManager.*;
 import static br.newtonpaiva.util.DateUtil.*;
-import static br.newtonpaiva.util.StringUtil.*;
 
-import br.newtonpaiva.modelo.excessoes.ConvenioInvalidoException;
 import br.newtonpaiva.util.CpfCnpjUtil;
 import br.newtonpaiva.util.StringUtil;
 import java.util.Calendar;
@@ -256,6 +255,25 @@ public class Convenio {
         }
     }
 
+    public static List<Convenio> buscarPorCurso(Integer idCurso) throws SQLException {
+        try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement s = c.prepareStatement(
+                        appSettings("convenio.select.curso"))) {
+
+            s.setInt(1, idCurso);
+            
+            try (ResultSet r = s.executeQuery()) {
+                List<Convenio> lista = new ArrayList<>();
+
+                while (r.next()) {
+                    lista.add(new Convenio(r));
+                }
+
+                return lista;
+            }
+        }
+    }
+    
     public static List<Convenio> buscarTodos() throws SQLException {
         try (Connection c = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement s = c.prepareStatement(

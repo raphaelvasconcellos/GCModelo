@@ -1,8 +1,8 @@
 package br.newtonpaiva.modelo;
 
+import br.newtonpaiva.modelo.excecoes.ConvenioInvalidoException;
 import static org.junit.Assert.*;
 
-import br.newtonpaiva.modelo.excessoes.ConvenioInvalidoException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -138,6 +138,17 @@ public class ConvenioTest {
      * @throws java.sql.SQLException
     */ 
     @Test
+    public void testBuscarPorCurso() throws SQLException {
+        List<Convenio> c = Convenio.buscarPorCurso(1);
+        assertEquals(1, c.size());
+        validarConvenioPadrao(c.get(0));
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Empresa.     
+     * @throws java.sql.SQLException
+    */ 
+    @Test
     public void testBuscarTodos() throws SQLException {
         List<Convenio> c = Convenio.buscarTodos();
         assertEquals(1, c.size());
@@ -156,7 +167,7 @@ public class ConvenioTest {
         validarConvenioPadrao(c.get(0));
     }
     
-    private void validarConvenioPadrao(Convenio c) throws SQLException {
+    public static void validarConvenioPadrao(Convenio c) throws SQLException {
         assertEquals(Empresa.buscarPorId(1), c.getEmpresa());
         assertEquals(Curso.buscarPorId(1), c.getCurso());
         assertEquals(SituacaoConvenio.CANCELADO, c.getSituacao());

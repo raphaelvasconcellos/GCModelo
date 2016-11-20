@@ -381,7 +381,7 @@ public class ContratoTest {
         assertTrue(f.isFile());
     }
 
-    public static void validarContratoPadrao(Contrato c) {
+    public static void validarContratoPadrao(Contrato c) throws SQLException {
         assertEquals(1, (int) c.getId());
 
         AlunoTest.validarAlunoPadrao(c.getAluno());

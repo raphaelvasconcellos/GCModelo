@@ -5,10 +5,12 @@
  */
 
 import br.newtonpaiva.modelo.AlunoTest;
+import br.newtonpaiva.modelo.ContratoHistoricoTeste;
 import br.newtonpaiva.modelo.ContratoTest;
 import br.newtonpaiva.modelo.ConvenioTest;
 import br.newtonpaiva.modelo.CursoTest;
 import br.newtonpaiva.modelo.EmpresaTest;
+import br.newtonpaiva.modelo.TermoAditivoTest;
 import br.newtonpaiva.modelo.UsuarioTest;
 import static br.newtonpaiva.util.ConfigurationManager.DB_SENHA;
 import static br.newtonpaiva.util.ConfigurationManager.DB_URL;
@@ -35,7 +37,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({CpfCnpjUtilTest.class, DateUtilTest.class, StringUtilTest.class,
     ValidacoesUtilTest.class, UsuarioTest.class, CursoTest.class,
-    EmpresaTest.class, AlunoTest.class, ConvenioTest.class, ContratoTest.class})
+    EmpresaTest.class, AlunoTest.class, ConvenioTest.class, ContratoTest.class, 
+    TermoAditivoTest.class, ContratoHistoricoTeste.class})
 public class TestSuite {
 
     @BeforeClass
