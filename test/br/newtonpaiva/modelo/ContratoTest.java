@@ -156,7 +156,7 @@ public class ContratoTest {
         c.setEmpresa(Empresa.buscarPorId(1));
         c.setTipo(TipoContrato.OBRIGATORIO);
         c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        c.setNumProtocolo("123456");
+        c.setNumProtocolo("999999");
         c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
         c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
         c.setDataTermino(new GregorianCalendar(2019, Calendar.JANUARY, 2));
@@ -187,7 +187,7 @@ public class ContratoTest {
         c.setEmpresa(Empresa.buscarPorId(1));
         c.setTipo(TipoContrato.OBRIGATORIO);
         c.setSituacaoAtual(SituacaoContrato.ANDAMENTO);
-        c.setNumProtocolo("123456");
+        c.setNumProtocolo("34567");
         c.setDataEntrada(new GregorianCalendar(2017, Calendar.JANUARY, 1));
         c.setDataInicio(new GregorianCalendar(2017, Calendar.JANUARY, 1));
         c.setDataTermino(new GregorianCalendar(2017, Calendar.MARCH, 1));

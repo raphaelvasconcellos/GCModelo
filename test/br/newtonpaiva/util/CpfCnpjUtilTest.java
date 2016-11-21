@@ -42,7 +42,7 @@ public class CpfCnpjUtilTest {
      * Test of formatarCpfCnpj method, of class CpfCnpjUtil.
      */
     @Test
-    public void testFormatar() {
+    public void testFormatarCpfCnpj() {
 
         String result;
         
@@ -69,7 +69,7 @@ public class CpfCnpjUtilTest {
      * Test of removerFormatacaoCpfCnpj method, of class CpfCnpjUtil.
      */
     @Test
-    public void testRemoverFormatacao() {
+    public void testRemoverFormatacaoCpfCnpj() {
         String result;
         
         result = removerFormatacaoCpfCnpj(null);
@@ -96,13 +96,18 @@ public class CpfCnpjUtilTest {
      */
     @Test
     public void testValidarCNPJ() {
-        System.out.println("validarCNPJ");
-        String CNPJ = "";
-        boolean expResult = false;
-        boolean result = validarCNPJ(CNPJ);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(validarCNPJ("16.521.155/0001-03"));
+        assertTrue(validarCNPJ("16521155000103"));
+        assertTrue(validarCNPJ("09.485.655/0001-71"));
+        assertTrue(validarCNPJ("09485655000171"));
+        assertTrue(validarCNPJ("38.194.699/0001-40"));
+        assertTrue(validarCNPJ("38194699000140"));
+        
+        assertFalse(validarCNPJ(null));
+        assertFalse(validarCNPJ(""));
+        assertFalse(validarCNPJ("    "));
+        assertFalse(validarCNPJ("067.445.456-65"));
+        assertFalse(validarCNPJ("16.521.155/001-03"));
     }
 
     /**
@@ -110,13 +115,8 @@ public class CpfCnpjUtilTest {
      */
     @Test
     public void testValidarMascaraCpf() {
-        System.out.println("validarMascaraCpf");
-        String letras = "";
-        boolean expResult = false;
-        boolean result = validarMascaraCpf(letras);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(validarMascaraCpf("067.445.456-65"));
+        assertFalse(validarMascaraCpf("067.445.456.65"));
     }
 
     /**
@@ -124,40 +124,17 @@ public class CpfCnpjUtilTest {
      */
     @Test
     public void testValidarCPF() {
-        System.out.println("validarCPF");
-        String CPF = "";
-        boolean expResult = false;
-        boolean result = validarCPF(CPF);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(validarCPF("534.354.384-79"));
+        assertTrue(validarCPF("53435438479"));
+        assertTrue(validarCPF("095.429.541-23"));
+        assertTrue(validarCPF("09542954123"));
+        assertTrue(validarCPF("318.438.051-38"));
+        assertTrue(validarCPF("31843805138"));
+        
+        assertFalse(validarCPF(null));
+        assertFalse(validarCPF(""));
+        assertFalse(validarCPF("    "));
+        assertFalse(validarCPF("67.445.456-65"));
+        assertFalse(validarCPF("16.521.155/0001-03"));
     }
-    
-    /**
-     * Test of formatarCpfCnpj method, of class ValidacoesUtil.
-     */
-    @Test
-    public void testFormatarCpfCnpj() {
-        System.out.println("formatarCpfCnpj");
-        String cpfCnpj = "";
-        String expResult = "";
-        String result = formatarCpfCnpj(cpfCnpj);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of removerFormatacaoCpfCnpj method, of class ValidacoesUtil.
-     */
-    @Test
-    public void testRemoverFormatacaoCpfCnpj() {
-        System.out.println("removerFormatacaoCpfCnpj");
-        String cpfCnpj = "";
-        String expResult = "";
-        String result = removerFormatacaoCpfCnpj(cpfCnpj);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }    
 }

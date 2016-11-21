@@ -5,7 +5,6 @@
  */
 package br.newtonpaiva.util;
 
-import java.util.Calendar;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,14 +42,14 @@ public class ValidacoesUtilTest {
      */
     @Test
     public void testValidarTamanhoTexto() {
-        System.out.println("validarTamanhoTexto");
-        String Texto = "";
-        Integer Tamanho = null;
-        boolean expResult = false;
-        boolean result = ValidacoesUtil.validarTamanhoTexto(Texto, Tamanho);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(ValidacoesUtil.validarTamanhoTexto(null, 1));
+        assertTrue(ValidacoesUtil.validarTamanhoTexto("", 10));
+        assertTrue(ValidacoesUtil.validarTamanhoTexto("          ", 10));
+        assertTrue(ValidacoesUtil.validarTamanhoTexto("012345678", 10));
+        assertTrue(ValidacoesUtil.validarTamanhoTexto("0123456789", 10));
+        
+        assertFalse(ValidacoesUtil.validarTamanhoTexto("123", 2));
+        assertFalse(ValidacoesUtil.validarTamanhoTexto("   ", 2));
     }
 
     /**
@@ -58,13 +57,14 @@ public class ValidacoesUtilTest {
      */
     @Test
     public void testValidarEmail() {
-        System.out.println("validarEmail");
-        String email = "";
-        boolean expResult = false;
-        boolean result = ValidacoesUtil.validarEmail(email);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(ValidacoesUtil.validarEmail("tarley.lana@gmail.com"));
+        
+        assertFalse(ValidacoesUtil.validarEmail("tarley.lana"));
+        assertFalse(ValidacoesUtil.validarEmail("tarley.lana@tarley"));
+        assertFalse(ValidacoesUtil.validarEmail("tarley.lana.com"));
+        assertFalse(ValidacoesUtil.validarEmail("@gmail.com"));
+        assertFalse(ValidacoesUtil.validarEmail(""));
+        assertFalse(ValidacoesUtil.validarEmail(null));
     }
 
     /**
@@ -72,13 +72,16 @@ public class ValidacoesUtilTest {
      */
     @Test
     public void testValidarLetras() {
-        System.out.println("validarLetras");
-        String letras = "";
-        boolean expResult = false;
-        boolean result = ValidacoesUtil.validarLetras(letras);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(ValidacoesUtil.validarLetras(null));
+        assertTrue(ValidacoesUtil.validarLetras(""));
+        assertTrue(ValidacoesUtil.validarLetras("     "));
+        assertTrue(ValidacoesUtil.validarLetras("ABCDEFGH"));
+        
+        assertFalse(ValidacoesUtil.validarLetras("ABCDE1FGH"));
+        assertFalse(ValidacoesUtil.validarLetras(" 123"));        
+        assertFalse(ValidacoesUtil.validarLetras("1"));
+        assertFalse(ValidacoesUtil.validarLetras("12345"));
+        
     }
 
     /**
@@ -86,13 +89,12 @@ public class ValidacoesUtilTest {
      */
     @Test
     public void testValidarInteiro() {
-        System.out.println("validarInteiro");
-        String letras = "";
-        boolean expResult = false;
-        boolean result = ValidacoesUtil.validarInteiro(letras);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(ValidacoesUtil.validarInteiro("12334"));
+        
+        assertFalse(ValidacoesUtil.validarInteiro(null));
+        assertFalse(ValidacoesUtil.validarInteiro(" "));
+        assertFalse(ValidacoesUtil.validarInteiro("     "));
+        assertFalse(ValidacoesUtil.validarInteiro("12345A6789"));
     }
 
     /**
@@ -100,13 +102,13 @@ public class ValidacoesUtilTest {
      */
     @Test
     public void testValidarCep() {
-        System.out.println("validarCep");
-        String letras = "";
-        boolean expResult = false;
-        boolean result = ValidacoesUtil.validarCep(letras);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertTrue(ValidacoesUtil.validarCep("32295181"));
+        assertTrue(ValidacoesUtil.validarCep("32.295-181"));
+        
+        assertFalse(ValidacoesUtil.validarCep(null));
+        assertFalse(ValidacoesUtil.validarCep(" "));
+        assertFalse(ValidacoesUtil.validarCep("     "));
+        assertFalse(ValidacoesUtil.validarCep("12345A6789"));
     }
 
     /**
@@ -114,28 +116,17 @@ public class ValidacoesUtilTest {
      */
     @Test
     public void testValidarTelefone() {
-        System.out.println("validarTelefone");
-        String letras = "";
-        boolean expResult = false;
-        boolean result = ValidacoesUtil.validarTelefone(letras);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+        assertTrue(ValidacoesUtil.validarTelefone("(31) 98888-1111"));
+        assertTrue(ValidacoesUtil.validarTelefone("(31) 98877-2233"));
+        assertTrue(ValidacoesUtil.validarTelefone("(31) 8877-2233"));
+        assertTrue(ValidacoesUtil.validarTelefone("(31) 3333-4466"));
+                
+        assertFalse(ValidacoesUtil.validarTelefone(null));
+        assertFalse(ValidacoesUtil.validarTelefone(" "));
+        assertFalse(ValidacoesUtil.validarTelefone("     "));
+        assertFalse(ValidacoesUtil.validarTelefone("988772222"));
+        assertFalse(ValidacoesUtil.validarTelefone("(31) 998877-2222"));
+        assertFalse(ValidacoesUtil.validarTelefone("(31) 18877-2222"));
 
-    /**
-     * Test of trocarString method, of class ValidacoesUtil.
-     */
-    @Test
-    public void testTrocarString() {
-        System.out.println("trocarString");
-        String Texto = "";
-        String Fixa = "";
-        String Substituicao = "";
-        String expResult = "";
-        String result = ValidacoesUtil.trocarString(Texto, Fixa, Substituicao);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }  
+    }
 }

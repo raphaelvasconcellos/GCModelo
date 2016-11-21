@@ -78,7 +78,43 @@ public class CursoTest {
             fail(e.getMessage());
         }
     }
-   
+    
+    @Test
+    public void testSalvarCursoDuplicado() throws SQLException {
+        Curso c = new Curso();
+        c.setCurso("Direito");
+        
+        try {
+            c.salvar();
+        } catch (CursoInvalidoException e) {
+            assertEquals("Já existe um curso cadastrado com este nome.", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testSalvarCursoNaoInformado() throws SQLException {
+        Curso c = new Curso();
+        
+        try {
+            c.salvar();
+        } catch (CursoInvalidoException e) {
+            assertEquals("O nome do curso deve ser informado.", e.getMessage());
+        }
+    }
+    
+    @Test
+    public void testSalvarCursoComMais100Caracteres() throws SQLException {
+        Curso c = new Curso();
+        c.setCurso("asdfadfadfadfadfadfadfadfakjfdlaj"
+                 + "dflkjafldkjalkffalfjlssjfflajdfla"
+                 + "jdflajdflassfljalfdfjaldkfjaldfjas");
+        try {
+            c.salvar();
+        } catch (CursoInvalidoException e) {
+            assertEquals("O nome do curso deve ter menos de 100 caracteres.", e.getMessage());
+        }
+    }
+    
     /**
      * Test of buscarPorId method, of class Curso.
      * @throws java.sql.SQLException

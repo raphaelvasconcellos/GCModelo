@@ -7,71 +7,57 @@ package br.newtonpaiva.util;
 
 import java.util.regex.*;
 
-/**
- *
- * @author Guilherme
- */
 public class ValidacoesUtil {
 
-    /*
-    * Validar tamanho do texto
-     */
-    public static boolean validarTamanhoTexto(String Texto, Integer Tamanho) {
-
-        //Se o tamanho for igual retorna true
-        return Texto.length() <= Tamanho;
+    public static boolean validarTamanhoTexto(String value, int tamanho) {
+        if(value == null)
+            return true;
+        
+        return value.length() <= tamanho;
     }
 
-    /*
-    Validar email
-     */
-    public static boolean validarEmail(String email) {//
+    public static boolean validarEmail(String value) {
+        if(StringUtil.isNullOrWhiteSpace(value))
+            return false;
+        
         Pattern p = Pattern.compile("^[\\w-]+(\\.[\\w-]+)*@([\\w-]+\\.)+[a-zA-Z]{2,7}$");
-        Matcher m = p.matcher(email);
+        Matcher m = p.matcher(value);
         return m.find();
     }
 
-    /*
-    Validar letras
-     */
-    public static boolean validarLetras(String letras) {
-        Pattern p = Pattern.compile("[a-zA-Z\\s]+");
-        Matcher m = p.matcher(letras);
-        return m.find();
+    public static boolean validarLetras(String value) {
+        if(StringUtil.isNullOrWhiteSpace(value))
+            return true;
+        
+        for(char c : value.toCharArray())
+            if(!Character.isAlphabetic(c))
+                return false;
+        
+        return true;
     }
 
-    /*
-    Validar inteiros
-     */
-    public static boolean validarInteiro(String letras) {//
-        Pattern p = Pattern.compile("[0-9]+");
-        Matcher m = p.matcher(letras);
-        return m.find();
+    public static boolean validarInteiro(String value) {
+        if(StringUtil.isNullOrWhiteSpace(value))
+            return false;
+        
+        for(char c : value.toCharArray())
+            if(!Character.isDigit(c))
+                return false;
+        
+        return true;
     }
 
-    /*
-    Validar Cep
-     */
-    public static boolean validarCep(String letras) {//
-        Pattern p = Pattern.compile("^[0-9]{2}\\.[0-9]{3}\\-[0-9]{3}$");
-        Matcher m = p.matcher(letras);
-        return m.find();
+    public static boolean validarCep(String value) {
+        if(StringUtil.isNullOrWhiteSpace(value))
+            return false;
+        return value.matches("^[0-9]{2}(\\.)?[0-9]{3}(\\-)?[0-9]{3}$");
     }
 
-    /*
-    Validar Telefone
-     */
-    public static boolean validarTelefone(String letras) {//
-        Pattern p = Pattern.compile("^\\([1-9]{2}\\) [2-9][0-9]{3,4}\\-[0-9]{4}$");
-        Matcher m = p.matcher(letras);
-        return m.find();
-    }
-
-    /*
-    * trocar strings em uma string
-     */
-    public static String trocarString(String Texto, String Fixa, String Substituicao) {
-        String TextoTrocado = Texto.replaceAll(Fixa, Substituicao);
-        return TextoTrocado;
+    public static boolean validarTelefone(String value) {
+        if(StringUtil.isNullOrWhiteSpace(value))
+            return false;
+       
+        return value.matches("^.((10)|([1-9][1-9]).)\\s9?[6-9][0-9]{3}-[0-9]{4}$") ||
+                value.matches("^.((10)|([1-9][1-9]).)\\s[2-5][0-9]{3}-[0-9]{4}$");
     }
 }
