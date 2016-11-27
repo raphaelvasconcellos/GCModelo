@@ -343,8 +343,10 @@ and open the template in the editor.
            FROM convenio c
         INNER JOIN empresa e ON e.cod_empresa = c.cod_empresa 
         INNER JOIN curso cur ON cur.cod_curso = c.cod_curso
-        WHERE (? IS NULL OR c.dat_vencimento = ?)
-          AND (? IS NULL OR c.dat_assinatura = ?)
+        WHERE (? IS NULL OR c.dat_vencimento &gt;= ?)
+          AND (? IS NULL OR c.dat_vencimento &lt;= ?)
+          AND (? IS NULL OR c.dat_assinatura &gt;= ?)
+          AND (? IS NULL OR c.dat_assinatura &lt;= ?)
           AND (? IS NULL OR c.cod_convenio_situacao = ?)
           AND (? IS NULL OR e.num_cnpj = ?)
           AND (? IS NULL OR cur.nom_curso LIKE ?)

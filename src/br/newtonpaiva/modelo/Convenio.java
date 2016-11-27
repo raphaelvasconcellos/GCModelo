@@ -309,52 +309,69 @@ public class Convenio {
         }
     }
 
-    public static List<Convenio> buscarTodos(Date dataAssinatura, Date dataVencimento,
+    public static List<Convenio> buscarTodos(Calendar dataAssinaturaInicio, Calendar dataAssinaturaFim, 
+            Calendar dataVencimentoInicio, Calendar dataVencimentoFim,
             String cnpj, SituacaoConvenio situacao, String curso) throws SQLException {
         
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(appSettings("convenio.select.por.filtro"))) {
             
-            if(dataAssinatura == null) {
+            if(dataAssinaturaInicio == null) {
                 stm.setNull(1, Types.DATE);
                 stm.setNull(2, Types.DATE);
             } else {
-                stm.setDate(1, dataAssinatura);
-                stm.setDate(2, dataAssinatura);
+                stm.setDate(1, converter(dataAssinaturaInicio));
+                stm.setDate(2, converter(dataAssinaturaInicio));
             }
             
-            if(dataVencimento == null) {
+            if(dataAssinaturaFim == null) {
                 stm.setNull(3, Types.DATE);
                 stm.setNull(4, Types.DATE);
             } else {
-                stm.setDate(3, dataVencimento);
-                stm.setDate(4, dataVencimento);
+                stm.setDate(3, converter(dataAssinaturaFim));
+                stm.setDate(4, converter(dataAssinaturaFim));
+            }
+            
+            if(dataVencimentoInicio == null) {
+                stm.setNull(5, Types.DATE);
+                stm.setNull(6, Types.DATE);
+            } else {
+                stm.setDate(5, converter(dataVencimentoInicio));
+                stm.setDate(6, converter(dataVencimentoInicio));
+            }
+            
+            if(dataVencimentoFim == null) {
+                stm.setNull(7, Types.DATE);
+                stm.setNull(8, Types.DATE);
+            } else {
+                stm.setDate(7, converter(dataVencimentoFim));
+                stm.setDate(8, converter(dataVencimentoFim));
             }
 
             if(situacao == null) {
-                stm.setNull(5, Types.INTEGER);
-                stm.setNull(6, Types.INTEGER);
+                stm.setNull(9, Types.INTEGER);
+                stm.setNull(10, Types.INTEGER);
             } else {
-                stm.setInt(5, situacao.ordinal());
-                stm.setInt(6, situacao.ordinal());
+                stm.setInt(9, situacao.ordinal());
+                stm.setInt(10, situacao.ordinal());
             }
             
             cnpj = CpfCnpjUtil.removerFormatacaoCpfCnpj(cnpj);
             
             if(StringUtil.isNullOrWhiteSpace(cnpj)) {
-                stm.setNull(7, Types.VARCHAR);
-                stm.setNull(8, Types.VARCHAR);
+                stm.setNull(11, Types.VARCHAR);
+                stm.setNull(12, Types.VARCHAR);
             } else {
-                stm.setString(7, cnpj);
-                stm.setString(8, cnpj);
+                stm.setString(11, cnpj);
+                stm.setString(12, cnpj);
             }
             
             if(StringUtil.isNullOrWhiteSpace(curso)) {
-                stm.setNull(8, Types.VARCHAR);
-                stm.setNull(10, Types.VARCHAR);
+                stm.setNull(13, Types.VARCHAR);
+                stm.setNull(14, Types.VARCHAR);
             } else {
-                stm.setString(9, curso);
-                stm.setString(10, "%" + curso + "%");
+                stm.setString(13, curso);
+                stm.setString(14, "%" + curso + "%");
             }
 
             try (ResultSet r = stm.executeQuery()) {

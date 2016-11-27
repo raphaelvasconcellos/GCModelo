@@ -155,13 +155,43 @@ public class ConvenioTest {
         validarConvenioPadrao(c.get(0));
     }
     
-     /**
+    /**
      * Test of buscarTodos method, of class Empresa.     
      * @throws java.sql.SQLException
     */ 
     @Test
-    public void testBuscarTodosComFiltro() throws SQLException {
-        List<Convenio> c = Convenio.buscarTodos(null, null, 
+    public void testBuscarTodosComFiltro01() throws SQLException {
+        List<Convenio> c = Convenio.buscarTodos(null, null, null, null, 
+                "16.521.155/0001-03", SituacaoConvenio.CANCELADO, "direi");
+        assertEquals(1, c.size());
+        validarConvenioPadrao(c.get(0));
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Empresa.     
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro02() throws SQLException {        
+        Calendar inicio = new GregorianCalendar(2017, Calendar.OCTOBER, 31);
+        Calendar fim = new GregorianCalendar(2017, Calendar.NOVEMBER, 2);
+                
+        List<Convenio> c = Convenio.buscarTodos(inicio, fim, null, null, 
+                "16.521.155/0001-03", SituacaoConvenio.CANCELADO, "direi");
+        assertEquals(1, c.size());
+        validarConvenioPadrao(c.get(0));
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Empresa.     
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro03() throws SQLException {        
+        Calendar inicio = new GregorianCalendar(2016, Calendar.NOVEMBER, 5);
+        Calendar fim = new GregorianCalendar(2016, Calendar.NOVEMBER, 30);
+                
+        List<Convenio> c = Convenio.buscarTodos(null, null, inicio, fim, 
                 "16.521.155/0001-03", SituacaoConvenio.CANCELADO, "direi");
         assertEquals(1, c.size());
         validarConvenioPadrao(c.get(0));
