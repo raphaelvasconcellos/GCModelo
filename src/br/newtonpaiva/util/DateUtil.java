@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -38,8 +39,13 @@ public class DateUtil {
     }
 
     public static Calendar converter(String data) {
+        
+        if(StringUtil.isNullOrWhiteSpace(data)) {
+            return null;
+        }
+        
         try {
-            SimpleDateFormat sd = new SimpleDateFormat("yyyy/MM/dd");
+            SimpleDateFormat sd = new SimpleDateFormat("dd/MM/yyyy");
             Calendar retorno = new GregorianCalendar();
             retorno.setTime(sd.parse(data));
             return retorno;
@@ -52,13 +58,16 @@ public class DateUtil {
         if (d1 == null || d2 == null) {
             return null;
         }
-
-        long diff = d2.getTime() - d1.getTime();
-        long diffDays = diff / (24 * 60 * 60 * 1000) + 1;
-        return diffDays;
+        
+        long diffInMillies = d2.getTime() - d1.getTime();
+        return TimeUnit.MILLISECONDS.toDays(diffInMillies);
     }
     
     public static Long getDifferenceDays(Calendar d1, Calendar d2) {
+        if(d1 == null || d2 == null) {
+            return null;
+        }
+        
         return getDifferenceDays(d1.getTime(), d2.getTime());
     }
 }
