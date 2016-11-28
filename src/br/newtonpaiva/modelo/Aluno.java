@@ -7,6 +7,7 @@ package br.newtonpaiva.modelo;
 
 import br.newtonpaiva.modelo.excessoes.AlunoInvalidoException;
 import static br.newtonpaiva.util.ConfigurationManager.*;
+import br.newtonpaiva.util.CpfCnpjUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -18,8 +19,10 @@ import java.util.List;
 import java.util.Objects;
 
 import static br.newtonpaiva.util.CpfCnpjUtil.*;
+import br.newtonpaiva.util.StringUtil;
 import static br.newtonpaiva.util.ValidacoesUtil.validarEmail;
 import static br.newtonpaiva.util.ValidacoesUtil.validarTamanhoTexto;
+import java.sql.Types;
 /**
  *
  * @author tarle
@@ -292,6 +295,63 @@ public class Aluno {
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(appSettings("aluno.select"))) {
 
+            try (ResultSet r = stm.executeQuery()) {
+                List<Aluno> lista = new ArrayList();
+                while (r.next()) {
+                    lista.add(new Aluno(r));
+                }
+                return lista;
+            }
+        }
+    }
+    
+    public static List<Aluno> buscarTodos(String nome, String curso, 
+            String ra, String cpf, String deficiente) throws SQLException {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement stm = con.prepareStatement(appSettings("aluno.select.por.filtro"))) {
+            
+            if(StringUtil.isNullOrWhiteSpace(ra)) {
+                stm.setNull(1, Types.VARCHAR);
+                stm.setNull(2, Types.VARCHAR);
+            } else {
+                stm.setString(1, ra);
+                stm.setString(2, ra);
+            }
+            
+            cpf = CpfCnpjUtil.removerFormatacaoCpfCnpj(cpf);
+            
+            if(StringUtil.isNullOrWhiteSpace(cpf)) {
+                stm.setNull(3, Types.VARCHAR);
+                stm.setNull(4, Types.VARCHAR);
+            } else {
+                stm.setString(3, cpf);
+                stm.setString(4, cpf);
+            }
+            
+            if(StringUtil.isNullOrWhiteSpace(nome)) {
+                stm.setNull(5, Types.VARCHAR);
+                stm.setNull(6, Types.VARCHAR);
+            } else {
+                stm.setString(5, nome);
+                stm.setString(6, "%" + nome + "%");
+            }
+            
+            if(StringUtil.isNullOrWhiteSpace(curso)) {
+                stm.setNull(7, Types.VARCHAR);
+                stm.setNull(8, Types.VARCHAR);
+            } else {
+                stm.setString(7, curso);
+                stm.setString(8, "%" + curso + "%");
+            }
+            
+            if(StringUtil.isNullOrWhiteSpace(deficiente)) {
+                stm.setNull(9, Types.VARCHAR);
+                stm.setNull(10, Types.VARCHAR);
+            } else {
+                stm.setString(9, deficiente);
+                stm.setString(10, deficiente);
+            }
+            
             try (ResultSet r = stm.executeQuery()) {
                 List<Aluno> lista = new ArrayList();
                 while (r.next()) {

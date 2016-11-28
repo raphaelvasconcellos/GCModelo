@@ -140,6 +140,43 @@ public class AlunoTest {
         validarAlunoDeficiente(a.get(1));
     }
     
+     /**
+     * Test of buscarTodos method, of class Aluno.
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro01() throws SQLException {
+        List<Aluno> a = Aluno.buscarTodos("Aluno Teste", "Psicologia", "11223344", "11111111111", "N");
+        
+        assertEquals((int) 1, a.size());
+        validarAlunoPadrao(a.get(0));
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Aluno.
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro02() throws SQLException {
+        List<Aluno> a = Aluno.buscarTodos("luno", "Dir", "22334455", "222.222.222-22", "S");
+        
+        assertEquals((int) 1, a.size());
+        validarAlunoDeficiente(a.get(0));
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Aluno.
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro03() throws SQLException {
+        List<Aluno> a = Aluno.buscarTodos("luno", null, null, null, null);
+        
+        assertEquals((int) 2, a.size());
+        validarAlunoPadrao(a.get(0));
+        validarAlunoDeficiente(a.get(1));
+    }
+    
     @Test
     public void testBuscarPorNome() throws SQLException {
         List<Aluno> a = Aluno.buscarPorNome("Aluno");

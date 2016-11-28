@@ -114,6 +114,22 @@ and open the template in the editor.
                 IND_DEFICIENTE 
            FROM aluno
     </entry>
+     <entry key="aluno.select.por.filtro">
+        SELECT  a.COD_ALUNO, 
+                a.COD_CURSO, 
+                a.NUM_RA, 
+                a.NOM_ALUNO, 
+                a.NUM_CPF_ALUNO, 
+                a.DES_EMAIL, 
+                a.IND_DEFICIENTE 
+           FROM aluno a
+        INNER JOIN CURSO c ON c.COD_CURSO = a.COD_CURSO
+          WHERE (? IS NULL OR a.NUM_RA = ?)
+            AND (? IS NULL OR a.NUM_CPF_ALUNO = ?)
+            AND (? IS NULL OR a.NOM_ALUNO LIKE ?)
+            AND (? IS NULL OR c.NOM_CURSO LIKE ?)
+            AND (? IS NULL OR a.IND_DEFICIENTE = ?) 
+    </entry>
     <entry key="aluno.select.id">
         SELECT  COD_ALUNO, 
                 COD_CURSO, 
