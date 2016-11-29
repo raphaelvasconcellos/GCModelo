@@ -556,10 +556,11 @@ and open the template in the editor.
     </entry>
     <entry key="documento.digitalizado.insert.termo">
         insert into documento_digitalizado(
+            cod_contrato,
             cod_termo_aditivo,
             nom_documento,
             img_documento
-        ) values( ?, ?, ?);
+        ) values(?, ?, ?, ?);
     </entry>
     <entry key="documento.digitalizado.select.contrato">
         select  cod_documento_digitalizado,

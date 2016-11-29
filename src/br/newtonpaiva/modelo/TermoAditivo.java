@@ -181,9 +181,10 @@ public class TermoAditivo {
                 PreparedStatement stm = con.prepareStatement(
                         appSettings("documento.digitalizado.insert.termo"),
                         Statement.RETURN_GENERATED_KEYS)) {
-            stm.setInt(1, getId());
-            stm.setString(2, (new File(nomeArquivo)).getName());
-            stm.setBlob(3, in);
+            stm.setInt(1, getContrato().getId());
+            stm.setInt(2, getId());
+            stm.setString(3, nomeArquivo);
+            stm.setBlob(4, in);
             stm.executeUpdate();
             
             ResultSet rs = stm.getGeneratedKeys();
