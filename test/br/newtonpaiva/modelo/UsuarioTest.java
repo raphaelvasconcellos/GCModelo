@@ -90,8 +90,68 @@ public class UsuarioTest {
     */ 
     @Test
     public void testBuscarTodos() throws SQLException {
-        List<Usuario> a = new Usuario().buscarTodos();
+        List<Usuario> a = Usuario.buscarTodos();
         validarUsuarioAdmin(a.get(0));        
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Usuario.
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro01() throws SQLException {
+        List<Usuario> a = Usuario.buscarTodos(null, null, null);
+        validarUsuarioAdmin(a.get(0));        
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Usuario.
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro02() throws SQLException {
+        List<Usuario> a = Usuario.buscarTodos("adm", null, null);
+        validarUsuarioAdmin(a.get(0));        
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Usuario.
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro03() throws SQLException {
+        List<Usuario> a = Usuario.buscarTodos(null, "dmi", null);
+        validarUsuarioAdmin(a.get(0));        
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Usuario.
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro04() throws SQLException {
+        List<Usuario> a = Usuario.buscarTodos(null, null, "@newtonpaiva");
+        validarUsuarioAdmin(a.get(0));        
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Usuario.
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro05() throws SQLException {
+        List<Usuario> a = Usuario.buscarTodos("Administrador","admin","admin@newtonpaiva.br");
+        validarUsuarioAdmin(a.get(0));        
+    }
+    
+    /**
+     * Test of buscarTodos method, of class Usuario.
+     * @throws java.sql.SQLException
+    */ 
+    @Test
+    public void testBuscarTodosComFiltro06() throws SQLException {
+        List<Usuario> a = Usuario.buscarTodos("Teste",null,null);
+        assertTrue(a.isEmpty());        
     }
     
     @Test(expected = UsuarioInvalidoException.class)
@@ -130,10 +190,11 @@ public class UsuarioTest {
         u.salvar();     
     }
     
+    @Test
     public void testSalvarSenha() {
         fail();
     }
-    
+    @Test
     public void testBuscarSenhaPorLogin() {
         fail();
     }

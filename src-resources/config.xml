@@ -52,7 +52,11 @@ and open the template in the editor.
           where des_login = ?;
     </entry>
     <entry key="usuario.select.login">
-        select cod_senha
+        select cod_usuario, 
+                nom_usuario, 
+                des_login, 
+                des_email,
+                cod_senha
           from usuario
          where des_login = ?
     </entry>
@@ -63,7 +67,18 @@ and open the template in the editor.
                 des_email,
                 cod_senha
            from usuario;
-    </entry>                                 
+    </entry>
+    <entry key="usuario.select.por.filtro">
+         SELECT u.cod_usuario, 
+                u.nom_usuario, 
+                u.des_login, 
+                u.des_email,
+                u.cod_senha
+           FROM usuario u
+          WHERE (? IS NULL OR u.nom_usuario LIKE ?)
+            AND (? IS NULL OR u.des_login LIKE ?)
+            AND (? IS NULL OR u.des_email LIKE ?)
+    </entry>                    
                                     
     <!-- CURSO -->
     <entry key="curso.insert">INSERT INTO curso (nom_curso) VALUE (?)</entry>

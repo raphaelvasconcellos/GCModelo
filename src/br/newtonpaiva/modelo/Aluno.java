@@ -412,4 +412,8 @@ public class Aluno {
     public void setDeficiente(String deficiente) {
         this.deficiente = deficiente;
     }
+    
+    public void carregarContratos() throws SQLException {
+        setContratos(Contrato.buscarPorIdAluno(getId()));
+    }
 }

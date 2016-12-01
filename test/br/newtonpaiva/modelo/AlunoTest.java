@@ -196,6 +196,11 @@ public class AlunoTest {
         validarAlunoPadrao(a.get(0));
     }
     
+    @Test
+    public void testCarregarContrato() {
+        fail("Teste não implementado!!!!!");
+    }
+    
     public static void validarAlunoPadrao(Aluno a) throws SQLException {
         assertEquals(1, (int) a.getId());
         assertEquals(Curso.buscarPorId(10), a.getCurso());

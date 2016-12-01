@@ -17,6 +17,7 @@ import br.newtonpaiva.modelo.excecoes.UsuarioInvalidoSenhaNuloException;
 import br.newtonpaiva.modelo.excecoes.UsuarioSenhaAtualInvalidoException;
 import br.newtonpaiva.modelo.excecoes.UsuarioSenhaAtualNuloInvalidoException;
 import br.newtonpaiva.modelo.excecoes.UsuarioTamanhoSenhaInvalidoException;
+import br.newtonpaiva.util.StringUtil;
 
 import java.util.Objects;
 import java.sql.Connection;
@@ -25,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -180,11 +182,49 @@ public class Usuario {
         return Objects.equals(this.login, other.login);
     }
 
-    public List<Usuario> buscarTodos() throws SQLException {
+    public static List<Usuario> buscarTodos() throws SQLException {
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(
                         appSettings("usuario.select"))) {
 
+            try (ResultSet r = stm.executeQuery()) {
+                List<Usuario> lista = new ArrayList();
+                while (r.next()) {
+                    lista.add(new Usuario(r));
+                }
+                return lista;
+            }
+        }
+    }
+    
+     public static List<Usuario> buscarTodos(String nome, String login, String email) throws SQLException {
+        try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
+                PreparedStatement stm = con.prepareStatement(appSettings("usuario.select.por.filtro"))) {
+
+            if(StringUtil.isNullOrWhiteSpace(nome)) {
+                stm.setNull(1, Types.VARCHAR);
+                stm.setNull(2, Types.VARCHAR);
+            } else {
+                stm.setString(1, nome);
+                stm.setString(2, "%" + nome + "%");
+            }
+            
+            if(StringUtil.isNullOrWhiteSpace(login)) {
+                stm.setNull(3, Types.VARCHAR);
+                stm.setNull(4, Types.VARCHAR);
+            } else {
+                stm.setString(3, login);
+                stm.setString(4, "%" + login + "%");
+            }
+            
+            if(StringUtil.isNullOrWhiteSpace(email)) {
+                stm.setNull(5, Types.VARCHAR);
+                stm.setNull(6, Types.VARCHAR);
+            } else {
+                stm.setString(5, email);
+                stm.setString(6, "%" + email + "%");
+            }
+            
             try (ResultSet r = stm.executeQuery()) {
                 List<Usuario> lista = new ArrayList();
                 while (r.next()) {
