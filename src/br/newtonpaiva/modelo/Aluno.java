@@ -20,8 +20,6 @@ import java.util.Objects;
 
 import static br.newtonpaiva.util.CpfCnpjUtil.*;
 import br.newtonpaiva.util.StringUtil;
-import static br.newtonpaiva.util.ValidacoesUtil.validarEmail;
-import static br.newtonpaiva.util.ValidacoesUtil.validarTamanhoTexto;
 import java.sql.Types;
 /**
  *
@@ -169,22 +167,35 @@ public class Aluno {
         return true;
     }
 
-    public void salvar() throws AlunoInvalidoException, SQLException {
-        if (getCurso() == null) {
-            throw new AlunoInvalidoException("O Curso deve ser informado.");
+    public void salvar() throws AlunoInvalidoException, SQLException {        
+        if (getCurso()== null) {
+            throw new AlunoInvalidoException("O Curso deve ser informado!");
+        }
+        
+        if (getRa() == null || getRa().equals("")) {
+            throw new AlunoInvalidoException("O RA deve ser informado!");
         }
 
-        if (getRa() == null) {
-            throw new AlunoInvalidoException("O RA deve ser informado.");
+        if (getNome() == null || getNome().equals("")) {
+            throw new AlunoInvalidoException("O Nome deve ser informado!");
         }
-
-        if (getNome() == null) {
-            throw new AlunoInvalidoException("O Nome deve ser informado.");
+        
+        if (getCpf() == null || getCpf().isEmpty() || getCpfFormatado() == null || getCpfFormatado().isEmpty()) {
+            throw new AlunoInvalidoException("O CPF deve ser informado!");
+        }
+        
+        if (getEmail() == null || getEmail().equals("")) {
+            throw new AlunoInvalidoException("O Email deve ser informado!");
+        }
+        
+        if (getDeficiente() == null || getDeficiente().equals("")) {
+            throw new AlunoInvalidoException("Deve ser informado se o aluno é deficiente!");
         }
 
         if (getId() == null) {
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
-                    PreparedStatement stm = con.prepareStatement(appSettings("aluno.insert"), Statement.RETURN_GENERATED_KEYS)) {
+                    PreparedStatement stm = con.prepareStatement(
+                            appSettings("aluno.insert"), Statement.RETURN_GENERATED_KEYS)) {
 
                 stm.setInt(1, getCurso().getId());
                 stm.setString(2, getRa());
@@ -196,16 +207,18 @@ public class Aluno {
                 stm.executeUpdate();
 
                 ResultSet rs = stm.getGeneratedKeys();
+                
                 if (rs.next()) {
                     setId(rs.getInt(1));
                 } else {
-                    throw new SQLException("Não foi possivel inserir o usuario");
+                    throw new SQLException("Não foi possivel inserir o usuário");
                 }
             }
         } else {
             try (Connection con = DriverManager.getConnection(
                     DB_URL, DB_USUARIO, DB_SENHA);
-                    PreparedStatement stm = con.prepareStatement(appSettings("aluno.update"))) {
+                    PreparedStatement stm = con.prepareStatement(
+                            appSettings("aluno.update"))) {
 
                 stm.setInt(1, getCurso().getId());
                 stm.setString(2, getRa());
@@ -214,7 +227,6 @@ public class Aluno {
                 stm.setString(5, getCpf());
                 stm.setString(6, getDeficiente());
                 stm.setInt(7, getId());
-
                 stm.executeUpdate();
             }
         }
@@ -377,6 +389,10 @@ public class Aluno {
             }
         }
     }
+    
+    public void carregarContratos() throws SQLException {
+        setContratos(Contrato.buscarPorIdAluno(getId()));
+    }
 
     /**
      * @return the cpf
@@ -411,9 +427,5 @@ public class Aluno {
      */
     public void setDeficiente(String deficiente) {
         this.deficiente = deficiente;
-    }
-    
-    public void carregarContratos() throws SQLException {
-        setContratos(Contrato.buscarPorIdAluno(getId()));
     }
 }
