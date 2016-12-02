@@ -407,7 +407,7 @@ public class Usuario {
         /*
          * Confirmação da Senha do usuário é diferente da senha
          */
-        if (!getSenhaAtual().equals(getSenha())) {
+        if (!getSenha().equals(getSenhaConfirmacao())) {
             throw new UsuarioInvalidoSenhaConfirmacaoSenhaNuloException();
         }
     }
