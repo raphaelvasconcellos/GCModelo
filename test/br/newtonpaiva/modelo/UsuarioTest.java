@@ -150,7 +150,7 @@ public class UsuarioTest {
     */ 
     @Test
     public void testBuscarTodosComFiltro06() throws SQLException {
-        List<Usuario> a = Usuario.buscarTodos("Teste",null,null);
+        List<Usuario> a = Usuario.buscarTodos("Teste", null, null);
         assertTrue(a.isEmpty());        
     }
     
@@ -191,12 +191,30 @@ public class UsuarioTest {
     }
     
     @Test
-    public void testSalvarSenha() {
-        fail();
+    public void testSalvarSenha() throws UsuarioInvalidoException, SQLException {
+        Usuario u = new Usuario();
+        u.setNome("Teste Salvar");
+        u.setLogin("teste");
+        u.setSenha("123456");
+        u.setEmail("teste@newtonpaiva.br");
+        try {            
+            u.salvar();
+            u.setSenha("123");
+            u.setSenhaConfirmacao("123");
+            u.salvarSenha();
+            
+            u = Usuario.buscarPorId(u.getId());
+            assertEquals("123", u.getSenha());
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        } finally {
+            Usuario.excluir(u.getId());
+        }
     }
     @Test
-    public void testBuscarSenhaPorLogin() {
-        fail();
+    public void testBuscarSenhaPorLogin() throws SQLException {
+        Usuario u = Usuario.buscarSenhaPorLogin("admin");
+        validarUsuarioAdmin(u);
     }
     
     public static void validarUsuarioAdmin(Usuario u) {

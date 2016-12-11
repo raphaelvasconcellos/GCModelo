@@ -197,8 +197,12 @@ public class AlunoTest {
     }
     
     @Test
-    public void testCarregarContrato() {
-        fail("Teste não implementado!!!!!");
+    public void testCarregarContrato() throws SQLException {
+        Aluno a = Aluno.buscarPorId(1);
+        a.carregarContratos();
+        
+        assertEquals(1, a.getListaContratos().size());
+        ContratoTest.validarContratoPadrao(a.getListaContratos().get(0));
     }
     
     public static void validarAlunoPadrao(Aluno a) throws SQLException {

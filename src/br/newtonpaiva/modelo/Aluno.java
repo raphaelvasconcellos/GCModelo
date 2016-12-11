@@ -37,7 +37,7 @@ public class Aluno {
     private String cpf;
     private Curso curso;
     private String deficiente;
-    private List<Contrato> contratos;
+    private List<Contrato> listaContratos;
 
     public Aluno() {
 
@@ -126,15 +126,15 @@ public class Aluno {
     /**
      * @return the contratos
      */
-    public List<Contrato> getContratos() {
-        return contratos;
+    public List<Contrato> getListaContratos() {
+        return listaContratos;
     }
 
     /**
-     * @param contratos the contratos to set
+     * @param listaContratos the contratos to set
      */
-    public void setContratos(List<Contrato> contratos) {
-        this.contratos = contratos;
+    public void setListaContratos(List<Contrato> listaContratos) {
+        this.listaContratos = listaContratos;
     }
 
     @Override
@@ -391,7 +391,7 @@ public class Aluno {
     }
     
     public void carregarContratos() throws SQLException {
-        setContratos(Contrato.buscarPorIdAluno(getId()));
+        setListaContratos(Contrato.buscarPorIdAluno(getId()));
     }
 
     /**

@@ -237,16 +237,16 @@ public class Usuario {
     
     public void salvar() throws UsuarioInvalidoException, SQLException {
         if (getNome() == null) {
-            throw new UsuarioInvalidoException("O Nome deve ser informado.");
+            throw new UsuarioInvalidoException("O nome deve ser informado.");
         }
         if (getLogin() == null) {
-            throw new UsuarioInvalidoException("O Login deve ser informado.");
+            throw new UsuarioInvalidoException("O login deve ser informado.");
         }
         if (getSenha() == null) {
-            throw new UsuarioInvalidoException("A enha deve ser informado.");
+            throw new UsuarioInvalidoException("A senha deve ser informado.");
         }
         if (getEmail() == null) {
-            throw new UsuarioInvalidoException("O Email deve ser informado.");
+            throw new UsuarioInvalidoException("O e-mail deve ser informado.");
         }
 
         if (getId() == null) {
@@ -284,6 +284,8 @@ public class Usuario {
                 stm.executeUpdate();
             }
         }
+        
+        setSenhaAtual(getSenha());
     }
 
     public static int excluir(Integer id) throws UsuarioInvalidoException, SQLException {
@@ -323,7 +325,7 @@ public class Usuario {
 
             try (ResultSet r = s.executeQuery()) {
                 if (r.next()) {
-                    if (r.getString(1).equals(senha)) {
+                    if (r.getString(5).equals(senha)) {
                         return true;
                     }
                     throw new SenhaException();
