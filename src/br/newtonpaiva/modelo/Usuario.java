@@ -235,7 +235,7 @@ public class Usuario {
         }
     }
     
-    public void salvar() throws UsuarioInvalidoException, SQLException {
+    public void salvar() throws UsuarioInvalidoException, UsuarioInvalidoSenhaNuloException, UsuarioInvalidoConfirmacaoSenhaNuloException, UsuarioInvalidoSenhaConfirmacaoSenhaNuloException, UsuarioTamanhoSenhaInvalidoException, SQLException {
         if (getNome() == null) {
             throw new UsuarioInvalidoException("O nome deve ser informado.");
         }
@@ -249,6 +249,8 @@ public class Usuario {
             throw new UsuarioInvalidoException("O e-mail deve ser informado.");
         }
 
+        validacaoSenhas();
+        
         if (getId() == null) {
 
             try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);

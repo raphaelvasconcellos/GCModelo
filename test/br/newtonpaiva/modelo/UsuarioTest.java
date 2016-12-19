@@ -60,6 +60,7 @@ public class UsuarioTest {
         u.setNome("Teste Salvar");
         u.setLogin("teste");
         u.setSenha("123456");
+        u.setSenhaConfirmacao("123456");
         u.setEmail("teste@newtonpaiva.br");
         try {            
             u.salvar();
@@ -69,7 +70,7 @@ public class UsuarioTest {
             int numLinhasExcluidas = Usuario.excluir(u.getId());
             assertEquals(1, numLinhasExcluidas);
             
-        } catch (UsuarioInvalidoException | SQLException ex) {
+        } catch (Exception ex) {
             fail(ex.getMessage());
         }
     }
@@ -155,7 +156,7 @@ public class UsuarioTest {
     }
     
     @Test(expected = UsuarioInvalidoException.class)
-    public void testNome() throws UsuarioInvalidoException, SQLException {
+    public void testNome() throws Exception {
         Usuario u = new Usuario();        
         u.setLogin("teste");
         u.setSenha("123456");
@@ -164,7 +165,7 @@ public class UsuarioTest {
     }
     
     @Test(expected = UsuarioInvalidoException.class)
-    public void testLogin() throws UsuarioInvalidoException, SQLException {
+    public void testLogin() throws Exception {
         Usuario u = new Usuario();
         u.setNome("Teste");       
         u.setSenha("123456");
@@ -173,7 +174,7 @@ public class UsuarioTest {
     }
     
     @Test(expected = UsuarioInvalidoException.class)
-    public void testSenha() throws UsuarioInvalidoException, SQLException {
+    public void testSenha() throws Exception {
         Usuario u = new Usuario();
         u.setNome("Teste");       
         u.setLogin("teste");
@@ -182,7 +183,7 @@ public class UsuarioTest {
     }
     
     @Test(expected = UsuarioInvalidoException.class)
-    public void testEmail() throws UsuarioInvalidoException, SQLException {
+    public void testEmail() throws Exception {
         Usuario u = new Usuario();
         u.setNome("Teste");       
         u.setSenha("123456");
@@ -196,6 +197,7 @@ public class UsuarioTest {
         u.setNome("Teste Salvar");
         u.setLogin("teste");
         u.setSenha("123456");
+        u.setSenhaConfirmacao("123456");
         u.setEmail("teste@newtonpaiva.br");
         try {            
             u.salvar();

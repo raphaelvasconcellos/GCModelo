@@ -26,7 +26,7 @@ public class CursoTest {
     public static final String DIREITO = "Direito";
     public static final String ENFERMAGEM = "Enfermagem";
     public static final String ENGENHARIA_CIVIL = "Engenharia Civil";
-    public static final String ENGENHARIA_PRODUCAO = "Engenharia de ProduÃ§Ã£o";
+    public static final String ENGENHARIA_PRODUCAO = "Engenharia de Produção";
     public static final String ENGENHARIA_ELETRICA = "Engenharia Eletrica";
     public static final String ENGENHARIA_MECANICA = "Engenharia Mecanica";
     public static final String ENGENHARIA_QUIMICA = "Engenharia Quimica";
@@ -105,11 +105,12 @@ public class CursoTest {
     @Test
     public void testSalvarCursoComMais100Caracteres() throws SQLException {
         Curso c = new Curso();
-        c.setCurso("asdfadfadfadfadfadfadfadfakjfdlaj"
+        c.setCurso("asdfadfadfadfadfadfadfadfakjfdlaja"
                  + "dflkjafldkjalkffalfjlssjfflajdfla"
                  + "jdflajdflassfljalfdfjaldkfjaldfjas");
         try {
             c.salvar();
+            fail("Foi possivel cadastrar um curso com mais de 100 caracteres");
         } catch (CursoInvalidoException e) {
             assertEquals("O nome do curso deve ter menos de 100 caracteres.", e.getMessage());
         }
