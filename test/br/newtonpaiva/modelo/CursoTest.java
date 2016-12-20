@@ -26,14 +26,14 @@ public class CursoTest {
     public static final String DIREITO = "Direito";
     public static final String ENFERMAGEM = "Enfermagem";
     public static final String ENGENHARIA_CIVIL = "Engenharia Civil";
-    public static final String ENGENHARIA_PRODUCAO = "Engenharia de Produção";
+    public static final String ENGENHARIA_PRODUCAO = "Engenharia de Producao";
     public static final String ENGENHARIA_ELETRICA = "Engenharia Eletrica";
     public static final String ENGENHARIA_MECANICA = "Engenharia Mecanica";
     public static final String ENGENHARIA_QUIMICA = "Engenharia Quimica";
     public static final String FARMACIA = "Farmacia";
     public static final String ODONTOLOGIA = "Odontologia";
     public static final String PSICOLOGIA = "Psicologia";
-    public static final String SISTEMAS_INFORMACAO = "Sistemas de Informação";
+    public static final String SISTEMAS_INFORMACAO = "Sistemas de Informacao";
     
     
     public CursoTest() {

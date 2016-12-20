@@ -5,6 +5,7 @@
  */
 package br.newtonpaiva.modelo;
 
+import br.newtonpaiva.modelo.excecoes.AnexoInvalidoException;
 import br.newtonpaiva.modelo.excessoes.ContratoInvalidoException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -340,7 +341,7 @@ public class ContratoTest {
     }
 
     @Test
-    public void testAnexarDocumento() throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException {
+    public void testAnexarDocumento() throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException, AnexoInvalidoException {
         Contrato c = Contrato.buscarPorId(1);
 
         String arquivoTeste = criarArquivoTesteCasoNaoExista();
@@ -349,7 +350,7 @@ public class ContratoTest {
     }
 
     @Test
-    public void testBuscarDocumentos() throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException {
+    public void testBuscarDocumentos() throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException, AnexoInvalidoException {
         Contrato c = Contrato.buscarPorId(1);
 
         String arquivoTeste = criarArquivoTesteCasoNaoExista();
@@ -364,7 +365,7 @@ public class ContratoTest {
     }
     
     @Test
-    public void testBaixarDocumento() throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException {
+    public void testBaixarDocumento() throws SQLException, ContratoInvalidoException, FileNotFoundException, IOException, AnexoInvalidoException {
         Contrato c = Contrato.buscarPorId(1);
 
         String arquivoTeste = criarArquivoTesteCasoNaoExista();

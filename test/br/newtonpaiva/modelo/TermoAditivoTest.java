@@ -5,8 +5,10 @@
  */
 package br.newtonpaiva.modelo;
 
+import br.newtonpaiva.modelo.excecoes.AnexoInvalidoException;
 import br.newtonpaiva.modelo.excessoes.AlunoInvalidoException;
 import br.newtonpaiva.modelo.excessoes.TermoAditivoInvalidoException;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -99,7 +101,7 @@ public class TermoAditivoTest {
     }
     
     @Test
-    public void testAnexarDocumento()throws SQLException, TermoAditivoInvalidoException, IOException {
+    public void testAnexarDocumento()throws SQLException, TermoAditivoInvalidoException, IOException, FileNotFoundException, AnexoInvalidoException {
         TermoAditivo c = new TermoAditivo().buscarPorId(1);
         
         try {

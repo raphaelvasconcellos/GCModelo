@@ -5,6 +5,7 @@
  */
 package br.newtonpaiva.modelo;
 
+import br.newtonpaiva.modelo.excecoes.AnexoInvalidoException;
 import br.newtonpaiva.modelo.excessoes.TermoAditivoInvalidoException;
 import static br.newtonpaiva.util.ConfigurationManager.*;
 import java.io.FileNotFoundException;
@@ -175,8 +176,15 @@ public class TermoAditivo {
     }
 
 
-    public int anexar(String nomeArquivo) throws FileNotFoundException, SQLException, IOException {
-        FileInputStream in = new FileInputStream(nomeArquivo);
+    public int anexar(String nomeArquivo) throws FileNotFoundException, SQLException, IOException, AnexoInvalidoException {
+        
+        File file = new File(nomeArquivo);
+        
+        if(file.length() > 1024 * 1024 * 1){
+            throw new AnexoInvalidoException("O arquivo é muito grande para anexar ao contrato.");
+        }
+        
+        FileInputStream in = new FileInputStream(file);
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(
                         appSettings("documento.digitalizado.insert.termo"),

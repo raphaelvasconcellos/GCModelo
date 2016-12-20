@@ -6,6 +6,7 @@
  */
 package br.newtonpaiva.modelo;
 
+import br.newtonpaiva.modelo.excecoes.AnexoInvalidoException;
 import br.newtonpaiva.modelo.excessoes.ContratoInvalidoException;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -552,8 +553,15 @@ public class Contrato {
 //</editor-fold>
 
 //<editor-fold defaultstate="collapsed" desc="anexarDocumento">
-    public int anexarDocumento(String nomeArquivo) throws FileNotFoundException, SQLException {
-        FileInputStream in = new FileInputStream(nomeArquivo);
+    public int anexarDocumento(String nomeArquivo) throws AnexoInvalidoException, FileNotFoundException, SQLException {
+        File file = new File(nomeArquivo);
+        
+        if(file.length() > 1024 * 1024 * 1){
+            throw new AnexoInvalidoException("O arquivo é muito grande para anexar ao contrato.");
+        }
+        
+        FileInputStream in = new FileInputStream(file);
+        
         try (Connection con = DriverManager.getConnection(DB_URL, DB_USUARIO, DB_SENHA);
                 PreparedStatement stm = con.prepareStatement(
                         appSettings("documento.digitalizado.insert"),

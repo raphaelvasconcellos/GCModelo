@@ -1,14 +1,14 @@
 INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (1, 'Direito');
 INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (2, 'Enfermagem');
 INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (3, 'Engenharia Civil');
-INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (4, 'Engenharia de Produção');
+INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (4, 'Engenharia de Producao');
 INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (5, 'Engenharia Eletrica');
 INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (6, 'Engenharia Mecanica');
 INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (7, 'Engenharia Quimica');
 INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (8, 'Farmacia');
 INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (9, 'Odontologia');
 INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (10, 'Psicologia');
-INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (11, 'Sistemas de Informação');
+INSERT INTO `curso` (`COD_CURSO`, `NOM_CURSO`) VALUES (11, 'Sistemas de Informacao');
 
 /* ALUNO */
 INSERT INTO `aluno` (`COD_ALUNO`, `COD_CURSO`, `NUM_RA`, `NOM_ALUNO`, `NUM_CPF_ALUNO`, `DES_EMAIL`, `IND_DEFICIENTE`) VALUES ('1', '10', '11223344', 'Aluno Teste', '11111111111', 'aluno@newtonpaiva.br', 'N');
